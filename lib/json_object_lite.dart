@@ -1,5 +1,5 @@
 /*
- * Package : Cbor
+ * Package : JsonObjectLite
  * Author : S. Hamblett <steve.hamblett@linux.com>
  * Date   : 12/12/2016
  * Copyright :  S.Hamblett
@@ -77,9 +77,9 @@ class JsonObjectLite<E> extends Object implements Map, Iterable {
   /// If set to false, then calling o.blah="123" will create a new blah property
   /// if it didn't already exist.
   ///
-  /// Set to false by default when a JsonObject is created with [JsonObject.fromJsonString()]
-  /// or [JsonObject.fromMap()].
-  /// The default constructor [JsonObject()], sets this value to
+  /// Set to false by default when a JsonObjectLite is created with [JsonObjectLite.fromJsonString()]
+  /// or [JsonObjectLite.fromMap()].
+  /// The default constructor [JsonObjectLite()], sets this value to
   /// true.
   bool isImmutable;
 
