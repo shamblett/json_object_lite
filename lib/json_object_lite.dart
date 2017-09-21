@@ -10,12 +10,6 @@ library json_object;
 
 import "dart:convert";
 
-// Set to true to as required
-bool enableJsonObjectLiteDebugMessages = false;
-void _log(obj) {
-  if (enableJsonObjectLiteDebugMessages) print(obj);
-}
-
 /// JsonObjectLite allows .property name access to JSON by using
 /// noSuchMethod.
 @proxy
@@ -110,6 +104,16 @@ class JsonObjectLite<E> extends Object implements Map, Iterable {
     }
   }
 
+  /// Set to true to as required
+  bool enableJsonObjectLiteDebugMessages = false;
+
+  /// Debug logger
+  void _log(String obj) {
+    if (enableJsonObjectLiteDebugMessages) {
+      print(obj);
+    }
+  }
+
   /// noSuchMethod()
   /// If we try to access a property using dot notation (eg: o.wibble ), then
   /// noSuchMethod will be invoked, and identify the getter or setter name.
@@ -142,10 +146,10 @@ class JsonObjectLite<E> extends Object implements Map, Iterable {
     }
 
     // If we get here, then we've not found it - throw.
-    _log("Not found: ${property}");
-    _log("IsGetter: ${mirror.isGetter}");
-    _log("IsSetter: ${mirror.isGetter}");
-    _log("isAccessor: ${mirror.isAccessor}");
+    _log("noSuchMethod:: Not found: ${property}");
+    _log("noSuchMethod:: IsGetter: ${mirror.isGetter}");
+    _log("noSuchMethod:: IsSetter: ${mirror.isGetter}");
+    _log("noSuchMethod:: isAccessor: ${mirror.isAccessor}");
     return super.noSuchMethod(mirror);
   }
 
@@ -191,80 +195,86 @@ class JsonObjectLite<E> extends Object implements Map, Iterable {
   }
 
   String _symbolToString(value) {
+    String ret;
     if (value is Symbol) {
       // Brittle but we avoid mirrors
       final String name = mirror.memberName.toString();
-      return name.substring((name.indexOf('"') + 1), name.lastIndexOf('"'));
+      ret = name.substring((name.indexOf('"') + 1), name.lastIndexOf('"'));
     } else {
-      return value.toString();
+      ret = value.toString();
     }
+    _log("_symbolToString:: Method name is: ${ret}");
+    return ret;
   }
 
   ///
   /// Iterable implementation methods and properties
   ///
 
-  Iterator<E> get iterator => this.toIterable().iterator;
+  bool any(bool f(dynamic element)) => this.toIterable().any(f);
 
-  Iterable<T> map<T>(dynamic f(dynamic element)) => this.toIterable().map(f);
+  bool contains(dynamic element) => this.toIterable().contains(element);
 
-  Iterable<E> where(bool f(dynamic element)) => this.toIterable().where(f);
+  E elementAt(int index) => this.toIterable().elementAt(index);
 
-  Iterable<T> expand<T>(dynamic f(dynamic element)) => this.toIterable().expand(f);
+  bool every(bool f(dynamic element)) => this.toIterable().every(f);
 
-  bool contains(E element) => this.toIterable().contains(element);
+  Iterable<T> expand<T>(dynamic f(dynamic element)) =>
+      this.toIterable().expand(f);
 
-  dynamic reduce(E combine(E value, E element)) =>
-      this.toIterable().reduce(combine);
+  dynamic firstWhere(bool test(dynamic value), {dynamic orElse}) =>
+      this.toIterable().firstWhere(test, orElse: orElse);
 
-  bool every(bool f(E element)) => this.toIterable().every(f);
+  T fold<T>(T initialValue, T combine(T a, dynamic b)) =>
+      this.toIterable().fold(initialValue, combine);
 
   String join([String separator = ""]) => this.toIterable().join(separator);
 
-  bool any(bool f(E element)) => this.toIterable().any(f);
+  dynamic lastWhere(bool test(dynamic value), {dynamic orElse}) =>
+      this.toIterable().firstWhere(test, orElse: orElse);
 
-  Iterable<E> take(int n) => this.toIterable().take(n);
+  Iterable<T> map<T>(dynamic f(dynamic element)) => this.toIterable().map(f);
 
-  Iterable<E> takeWhile(bool test(E value)) =>
-      this.toIterable().takeWhile(test);
+  dynamic reduce(dynamic combine(dynamic value, dynamic element)) =>
+      this.toIterable().reduce(combine);
+
+  dynamic singleWhere(bool test(dynamic value), {dynamic orElse}) =>
+      this.toIterable().firstWhere(test, orElse: orElse);
 
   Iterable<E> skip(int n) => this.toIterable().skip(n);
 
-  Iterable<E> skipWhile(bool test(E value)) =>
+  Iterable<E> skipWhile(bool test(dynamic value)) =>
       this.toIterable().skipWhile(test);
 
-  E get first => this.toIterable().first;
+  Iterable<E> take(int n) => this.toIterable().take(n);
 
-  E get last => this.toIterable().last;
-
-  E get single => this.toIterable().single;
-
-  E fold(initialValue, dynamic combine(a, b)) =>
-      this.toIterable().fold(initialValue, combine);
-
-  E elementAt(int index) => this.toIterable().elementAt(index);
+  Iterable<E> takeWhile(bool test(dynamic value)) =>
+      this.toIterable().takeWhile(test);
 
   List<dynamic> toList({bool growable: true}) =>
       this.toIterable().toList(growable: growable);
 
   Set<dynamic> toSet() => this.toIterable().toSet();
 
-  dynamic firstWhere(test, {orElse}) =>
-      this.toIterable().firstWhere(test, orElse: orElse);
-  dynamic lastWhere(test, {orElse}) =>
-      this.toIterable().firstWhere(test, orElse: orElse);
-  dynamic singleWhere(test, {orElse}) =>
-      this.toIterable().firstWhere(test, orElse: orElse);
+  Iterable<E> where(bool f(dynamic element)) => this.toIterable().where(f);
+
+  E get first => this.toIterable().first;
+
+  Iterator<E> get iterator => this.toIterable().iterator;
+
+  E get last => this.toIterable().last;
+
+  E get single => this.toIterable().single;
 
   ///
   /// Map implementation methods and properties *
   ///
 
   // Pass through to the inner _objectData map.
-  bool containsValue(value) => _objectData.containsValue(value);
+  bool containsValue(dynamic value) => _objectData.containsValue(value);
 
   // Pass through to the inner _objectData map.
-  bool containsKey(value) {
+  bool containsKey(dynamic value) {
     return _objectData.containsKey(_symbolToString(value));
   }
 
@@ -272,10 +282,11 @@ class JsonObjectLite<E> extends Object implements Map, Iterable {
   bool get isNotEmpty => _objectData.isNotEmpty;
 
   // Pass through to the inner _objectData map.
-  operator [](key) => _objectData[key];
+  dynamic operator [](dynamic key) => _objectData[key];
 
   // Pass through to the inner _objectData map.
-  forEach(func) => _objectData.forEach(func);
+  void forEach(void func(dynamic key, dynamic value)) =>
+      _objectData.forEach(func);
 
   // Pass through to the inner _objectData map.
   Iterable get keys => _objectData.keys;
@@ -290,7 +301,7 @@ class JsonObjectLite<E> extends Object implements Map, Iterable {
   bool get isEmpty => _objectData.isEmpty;
 
   // Pass through to the inner _objectData map.
-  addAll(items) => _objectData.addAll(items);
+  void addAll(dynamic items) => _objectData.addAll(items);
 
   /// Specific implementations which check isImmtable to determine if an
   /// unknown key should be allowed.
@@ -298,8 +309,8 @@ class JsonObjectLite<E> extends Object implements Map, Iterable {
   /// If [isImmutable] is false, or the key already exists,
   /// then allow the edit.
   /// Throw [JsonObjectLiteException] if we're not allowed to add a new
-  ///key
-  operator []=(key, value) {
+  /// key
+  void operator []=(dynamic key, dynamic value) {
     // If the map is not immutable, or it already contains the key, then
     if (this.isImmutable == false || this.containsKey(key)) {
       //allow the edit, as we don't care if it's a new key or not
@@ -313,7 +324,7 @@ class JsonObjectLite<E> extends Object implements Map, Iterable {
   /// then allow the edit.
   /// Throw [JsonObjectLiteException] if we're not allowed to add a new
   /// key
-  putIfAbsent(key, ifAbsent()) {
+  void putIfAbsent(dynamic key, ifAbsent()) {
     if (this.isImmutable == false || this.containsKey(key)) {
       return _objectData.putIfAbsent(key, ifAbsent);
     } else {
@@ -325,7 +336,7 @@ class JsonObjectLite<E> extends Object implements Map, Iterable {
   /// then allow the removal.
   /// Throw [JsonObjectLiteException] if we're not allowed to remove a
   /// key
-  remove(key) {
+  void remove(dynamic key) {
     if (this.isImmutable == false || this.containsKey(key)) {
       return _objectData.remove(key);
     } else {
@@ -335,7 +346,7 @@ class JsonObjectLite<E> extends Object implements Map, Iterable {
 
   /// If [isImmutable] is false, then allow the map to be cleared
   /// Throw [JsonObjectLiteException] if we're not allowed to clear.
-  clear() {
+  void clear() {
     if (this.isExtendable == false) {
       _objectData.clear();
     } else {
