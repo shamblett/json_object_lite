@@ -10,6 +10,16 @@ library json_object;
 
 import "dart:convert";
 
+/// Set to true to as required
+bool enableJsonObjectLiteDebugMessages = false;
+
+/// Debug logger
+void _log(String obj) {
+  if (enableJsonObjectLiteDebugMessages) {
+    print(obj);
+  }
+}
+
 /// JsonObjectLite allows .property name access to JSON by using
 /// noSuchMethod.
 @proxy
@@ -101,16 +111,6 @@ class JsonObjectLite<E> extends Object implements Map, Iterable {
     } else {
       return new List(); // return an empty list, rather than return null
 
-    }
-  }
-
-  /// Set to true to as required
-  bool enableJsonObjectLiteDebugMessages = false;
-
-  /// Debug logger
-  void _log(String obj) {
-    if (enableJsonObjectLiteDebugMessages) {
-      print(obj);
     }
   }
 
