@@ -27,6 +27,14 @@ abstract class AddressList extends JsonObjectLite {
   Address address;
 }
 
+class MyList extends JsonObjectLite {
+  MyList();
+
+  factory MyList.fromString(String jsonString) {
+    return new JsonObjectLite.fromJsonString(jsonString, new MyList());
+  }
+}
+
 void main() {
   group("Construction", () {
     test("Default constructor", () {
@@ -267,6 +275,38 @@ void main() {
       final String json = person.toString();
       expect(json,
           '{"name":"Chris","languages":["Dart","Java"],"address":{"line1":"1 the street","postcode":"AB12 3DE"}}');
+    });
+  });
+
+  group("Iteration", () {
+    test("List", () {
+      final String testJson = """
+      [{"Dis":1111.1,"Flag":0,"Obj":{"ID":1,"Title":"Volvo 140"}},
+      {"Dis":2222.2,"Flag":0,"Obj":{"ID":2,"Title":"Volvo 240"}}]
+      """;
+      final MyList list = new MyList.fromString(testJson);
+      expect(list[0].Obj.Title, equals("Volvo 140"));
+    });
+
+    test("List Iterator", () {
+      final String testJson = """
+      [{"Dis":1111.1,"Flag":0,"Obj":{"ID":1,"Title":"Volvo 140"}},
+      {"Dis":2222.2,"Flag":0,"Obj":{"ID":2,"Title":"Volvo 240"}}]
+      """;
+      final MyList jsonObject = new MyList.fromString(testJson);
+
+      var firstTitle = "";
+      var secondTitle = "";
+
+      for (var item in jsonObject.toIterable()) {
+        if (firstTitle == "") {
+          firstTitle = item.Obj.Title;
+        } else {
+          secondTitle = item.Obj.Title;
+        }
+      }
+      expect(firstTitle, equals("Volvo 140"));
+      expect(secondTitle, equals("Volvo 240"));
     });
   });
 }
