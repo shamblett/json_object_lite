@@ -210,4 +210,63 @@ void main() {
       expect(person.name, "Steve");
     });
   });
+
+  group("String handling", () {
+    test("Stringify", () {
+      final JsonObjectLite person = new JsonObjectLite();
+      person.isImmutable = false;
+
+      // Dynamically create some properties
+      person.name = "Chris";
+      person.languages = new List();
+      person.languages.add("Dart");
+      person.languages.add("Java");
+
+      // create a new JsonObjectLite that we will inject
+      final JsonObjectLite address = new JsonObjectLite();
+      address.isImmutable = false;
+      address.line1 = "1 the street";
+      address.postcode = "AB12 3DE";
+
+      // add the address to the person
+      person.address = address;
+
+      // convert to a json string:
+      final String json = new JsonEncoder().convert(person);
+      expect(json,
+          '{"name":"Chris","languages":["Dart","Java"],"address":{"line1":"1 the street","postcode":"AB12 3DE"}}');
+
+      // convert back to a map
+      final Map convertedBack = new JsonDecoder(null).convert(json);
+
+      // test
+      expect(convertedBack["address"]["line1"], equals(address.line1));
+      expect(convertedBack["name"], equals(person.name));
+    });
+
+    test("toString", () {
+      final JsonObjectLite person = new JsonObjectLite();
+      person.isImmutable = false;
+
+      // Dynamically create some properties
+      person.name = "Chris";
+      person.languages = new List();
+      person.languages.add("Dart");
+      person.languages.add("Java");
+
+      // create a new JsonObjectLite that we will inject
+      final JsonObjectLite address = new JsonObjectLite();
+      address.isImmutable = false;
+      address.line1 = "1 the street";
+      address.postcode = "AB12 3DE";
+
+      // add the address to the person
+      person.address = address;
+
+      // convert to a json string using toString()
+      final String json = person.toString();
+      expect(json,
+          '{"name":"Chris","languages":["Dart","Java"],"address":{"line1":"1 the street","postcode":"AB12 3DE"}}');
+    });
+  });
 }
