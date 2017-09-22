@@ -5,8 +5,27 @@
  * Copyright :  S.Hamblett
  */
 
+import 'dart:convert';
 import 'package:json_object_lite/json_object_lite.dart';
 import 'package:test/test.dart';
+
+@proxy
+class Person extends JsonObjectLite {
+  Person() : super();
+
+  factory Person.fromString(String jsonString) {
+    return new JsonObjectLite.fromJsonString(jsonString, new Person());
+  }
+}
+
+abstract class Address extends JsonObjectLite {
+  String line1;
+  String postcode;
+}
+
+abstract class AddressList extends JsonObjectLite {
+  Address address;
+}
 
 void main() {
   group("Construction", () {
@@ -129,6 +148,66 @@ void main() {
       // Try an update
       o.handles.googlePlus.name = "+ChrisB";
       expect("+ChrisB", equals(o.handles.googlePlus.name));
+    });
+  });
+
+  group("Typing", () {
+    test("Typed Object", () {
+      final JsonObjectLite o = new JsonObjectLite.fromMap(
+          {"Name": "Fred", "Sex": "male", "Age": 40});
+      expect(o.isImmutable, false);
+      final JsonObjectLite dest =
+      JsonObjectLite.toTypedJsonObjectLite(o, new JsonObjectLite());
+      expect(dest.Name, "Fred");
+      expect(dest.Sex, "male");
+      expect(dest.Age, 40);
+      expect(dest.isImmutable, true);
+    });
+
+    test("Strong typing new", () {
+      final Person person = new Person();
+      expect(person.isImmutable, true);
+      bool thrown = false;
+      try {
+        expect(throwsNoSuchMethodError, person.name);
+      } catch (ex) {
+        thrown = true;
+      }
+      expect(thrown, true);
+    });
+
+    test("Strong typing new extendable", () {
+      final Person person = new Person();
+      expect(person.isImmutable, true);
+      person.isImmutable = false;
+      person.name = "Steve";
+      expect(person.name, "Steve");
+      final String s = new JsonEncoder().convert(person);
+      expect(s, equals('{"name":"Steve"}'));
+    });
+
+    test("Strong typing from JSON string", () {
+      final String jsonString = """
+      {
+        "addresses" : [
+          { "address": {
+              "line1": "1 the street",
+              "postcode": "ab12 3de"
+            }
+          },
+          { "address": {
+              "line1": "1 the street",
+              "postcode": "ab12 3de"
+            }
+          }
+        ]
+      }
+      """;
+      final Person person = new Person.fromString(jsonString);
+      expect(person.isImmutable, false);
+      expect(person.addresses[0].address.line1, equals("1 the street"));
+      person.name = "Steve";
+      expect(person.name, "Steve");
     });
   });
 }

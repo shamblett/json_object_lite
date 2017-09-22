@@ -344,7 +344,7 @@ class JsonObjectLite<E> extends Object implements Map, Iterable {
   /// then allow the removal.
   /// Throw [JsonObjectLiteException] if we're not allowed to remove a
   /// key
-  void remove(dynamic key) {
+  bool remove(dynamic key) {
     if (this.isImmutable == false || this.containsKey(key)) {
       return _objectData.remove(key);
     } else {
