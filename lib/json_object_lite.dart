@@ -129,19 +129,22 @@ class JsonObjectLite<E> extends Object implements Map, Iterable {
     int positionalArgs = 0;
     if (mirror.positionalArguments != null)
       positionalArgs = mirror.positionalArguments.length;
-
-    final String property = _symbolToString(mirror.memberName);
+    String property = "Not Found";
 
     if (mirror.isGetter && (positionalArgs == 0)) {
       // Synthetic getter
+      property = _symbolToString(mirror.memberName);
       if (this.containsKey(property)) {
         return this[property];
       }
     } else if (mirror.isSetter && positionalArgs == 1) {
       // Synthetic setter
-      //If the property doesn't exist, it will only be added
-      //if isImmutable = false
-      this[property] = mirror.positionalArguments[0];
+      // If the property doesn't exist, it will only be added
+      // if isImmutable = false
+      property = _symbolToString(mirror.memberName, true);
+      if (!isImmutable) {
+        this[property] = mirror.positionalArguments[0];
+      }
       return this[property];
     }
 
@@ -194,12 +197,17 @@ class JsonObjectLite<E> extends Object implements Map, Iterable {
     }
   }
 
-  String _symbolToString(value) {
+  /// Convert the incoming method name(symbol) into a string, without using mirrors.
+  String _symbolToString(dynamic value, [bool isSetter = false]) {
     String ret;
     if (value is Symbol) {
       // Brittle but we avoid mirrors
-      final String name = mirror.memberName.toString();
+      final String name = value.toString();
       ret = name.substring((name.indexOf('"') + 1), name.lastIndexOf('"'));
+      // Setters have an '=' on the end, remove it
+      if (isSetter) {
+        ret = ret.replaceFirst("=", "", ret.length - 1);
+      }
     } else {
       ret = value.toString();
     }
