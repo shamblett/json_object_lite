@@ -321,6 +321,58 @@ void main() {
     });
   });
 
+  group("Iterables", () {
+    test("List", () {
+      final JsonObjectLite o = new JsonObjectLite();
+      o.isImmutable = false;
+      o.name = "Steve";
+      o.age = 55;
+      o.sex = "male";
+      o.languages = ["dart", "c", "c++"];
+      expect(o.any((String name) => name == "Steve"), isTrue);
+      expect(o.contains(o.languages), isTrue);
+      expect(o.elementAt(0), "Steve");
+      expect(o.every((dynamic element) => element == 55), isFalse);
+      expect(o.expand((i) => [i]).toList(),
+          ['Steve', 55, 'male', ['dart', 'c', 'c++']]);
+      expect(o.firstWhere((dynamic element) => element == 'male'), o.sex);
+      o.sex2 = "male";
+      expect(o.lastWhere((dynamic element) => element == 'male'), o.sex2);
+      expect(o.singleWhere((dynamic element) => element == 'male'), o.sex);
+      final JsonObjectLite folder = new JsonObjectLite();
+      folder.isImmutable = false;
+      folder.nfirst = 1;
+      folder.nsecond = 2;
+      folder.nthird = 3;
+      expect(folder.fold(0, (prev, element) => prev + element), 6);
+      expect(folder.reduce((value, element) => value + element), 6);
+      expect(folder.join("-"), "1-2-3");
+      expect(o.map, new isInstanceOf<MappedIterable<dynamic, dynamic>>());
+      expect(folder
+          .skip(2)
+          .length, 1);
+      expect(folder.skipWhile((dynamic element) => element > 3), [1, 2, 3]);
+      expect(folder
+          .take(2)
+          .length, 2);
+      expect(folder.takeWhile((dynamic element) => element > 3), []);
+      expect(o.toList(), ['Steve', 55, 'male', ['dart', 'c', 'c++'], 'male']);
+      expect(o.toSet(), ['Steve', 55, 'male', ['dart', 'c', 'c++']]);
+      expect(folder.where((dynamic element) => element == 55), []);
+      expect(folder.first, 1);
+      expect(folder.last, 3);
+      final JsonObjectLite folder1 = new JsonObjectLite();
+      folder.isImmutable = false;
+      folder1.none = 1;
+      try {
+        expect(folder1.single, folder1.none);
+      } catch (ex) {
+        expect(ex.toString(), 'Bad state: No element');
+      }
+      expect(o.iterator, new isInstanceOf<_CompactIterator>());
+    });
+  });
+
   group("Utility", () {
     test("Debug", () {
       enableJsonObjectLiteDebugMessages = true;
