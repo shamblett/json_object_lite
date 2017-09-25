@@ -72,7 +72,7 @@ class JsonObjectLite<E> extends Object implements Map, Iterable {
   }
 
   /// Contains either a [List] or [Map]
-  var _objectData;
+  dynamic _objectData;
 
   static JsonEncoder encoder = new JsonEncoder();
   static JsonDecoder decoder = new JsonDecoder(null);
@@ -101,17 +101,11 @@ class JsonObjectLite<E> extends Object implements Map, Iterable {
   /// Returns either the underlying parsed data as an iterable list (if the
   /// underlying data contains a list), or returns the map.values (if the
   /// underlying data contains a map).
-  ///
-  /// Returns an empty list if neither of the above is true.
   Iterable toIterable() {
     if (_objectData is Iterable) {
       return _objectData;
-    } else if (_objectData is Map) {
-      return _objectData.values;
-    } else {
-      return new List(); // return an empty list, rather than return null
-
     }
+    return _objectData.values;
   }
 
   /// noSuchMethod()

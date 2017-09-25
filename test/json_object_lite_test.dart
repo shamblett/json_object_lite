@@ -333,8 +333,12 @@ void main() {
       expect(o.contains(o.languages), isTrue);
       expect(o.elementAt(0), "Steve");
       expect(o.every((dynamic element) => element == 55), isFalse);
-      expect(o.expand((i) => [i]).toList(),
-          ['Steve', 55, 'male', ['dart', 'c', 'c++']]);
+      expect(o.expand((i) => [i]).toList(), [
+        'Steve',
+        55,
+        'male',
+        ['dart', 'c', 'c++']
+      ]);
       expect(o.firstWhere((dynamic element) => element == 'male'), o.sex);
       o.sex2 = "male";
       expect(o.lastWhere((dynamic element) => element == 'male'), o.sex2);
@@ -356,8 +360,19 @@ void main() {
           .take(2)
           .length, 2);
       expect(folder.takeWhile((dynamic element) => element > 3), []);
-      expect(o.toList(), ['Steve', 55, 'male', ['dart', 'c', 'c++'], 'male']);
-      expect(o.toSet(), ['Steve', 55, 'male', ['dart', 'c', 'c++']]);
+      expect(o.toList(), [
+        'Steve',
+        55,
+        'male',
+        ['dart', 'c', 'c++'],
+        'male'
+      ]);
+      expect(o.toSet(), [
+        'Steve',
+        55,
+        'male',
+        ['dart', 'c', 'c++']
+      ]);
       expect(folder.where((dynamic element) => element == 55), []);
       expect(folder.first, 1);
       expect(folder.last, 3);
@@ -388,7 +403,12 @@ void main() {
         print("$key = $value");
       });
       expect(o.keys.toList(), ['name', 'age', 'sex', 'languages']);
-      expect(o.values.toList(), ['Steve', 55, 'male', ['dart', 'c', 'c++']]);
+      expect(o.values.toList(), [
+        'Steve',
+        55,
+        'male',
+        ['dart', 'c', 'c++']
+      ]);
       expect(o.length, 4);
       final Map items = {"pets": "none", "colour": "white"};
       o.addAll(items);
@@ -415,6 +435,36 @@ void main() {
       bool thrown = false;
       try {
         o['name'] = "fred";
+      } catch (ex) {
+        expect(ex, new isInstanceOf<JsonObjectLiteException>());
+        expect(
+            ex.toString(), "JsonObjectException: JsonObject is not extendable");
+        thrown = true;
+      }
+      expect(thrown, true);
+      thrown = false;
+      try {
+        o.putIfAbsent("house", () => 6);
+      } catch (ex) {
+        expect(ex, new isInstanceOf<JsonObjectLiteException>());
+        expect(
+            ex.toString(), "JsonObjectException: JsonObject is not extendable");
+        thrown = true;
+      }
+      expect(thrown, true);
+      thrown = false;
+      try {
+        o.clear();
+      } catch (ex) {
+        expect(ex, new isInstanceOf<JsonObjectLiteException>());
+        expect(
+            ex.toString(), "JsonObjectException: JsonObject is not extendable");
+        thrown = true;
+      }
+      expect(thrown, true);
+      thrown = false;
+      try {
+        o.remove("name");
       } catch (ex) {
         expect(ex, new isInstanceOf<JsonObjectLiteException>());
         expect(
