@@ -309,4 +309,20 @@ void main() {
       expect(secondTitle, equals("Volvo 240"));
     });
   });
+
+  group("Utility", () {
+    test("Debug", () {
+      enableJsonObjectLiteDebugMessages = true;
+      final o = new JsonObjectLite();
+      o.isImmutable = true;
+      o.name = "fred";
+      bool thrown = false;
+      try {
+        print(o.address);
+      } catch (ex) {
+        thrown = true;
+      }
+      expect(thrown, true);
+    });
+  });
 }
