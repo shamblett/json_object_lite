@@ -7,8 +7,6 @@ homepage: https://github.com/shamblett/json_object_lite
 environment:
   sdk: ">=1.8.0  <2.0.0-dev.infinity"
 
-dependencies:
-
 dev_dependencies:
   test: '^0.12.0'
   coverage: '^0.7.3'
