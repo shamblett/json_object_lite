@@ -42,7 +42,7 @@ void main() {
       expect(jsonObject.isImmutable, true);
     });
 
-    test("From JSON string", () {
+    test("From JSON string - Map", () {
       final String jsonString = """
       {
         "name" : "Chris",
@@ -102,6 +102,17 @@ void main() {
       // Try an update
       o.handles.googlePlus.name = "+ChrisB";
       expect("+ChrisB", equals(o.handles.googlePlus.name));
+    });
+
+    test("From JSON string - list", () {
+      final String jsonString =
+          '[1, 2, 3, 4, 5, "one", "two", "three", "four", "five"]';
+
+      final JsonObjectLite o = new JsonObjectLite.fromJsonString(jsonString);
+      expect(o.isImmutable, false);
+      final List theList = o.toList();
+      expect(
+          theList.toString(), '[1, 2, 3, 4, 5, one, two, three, four, five]');
     });
 
     test("From Map", () {
