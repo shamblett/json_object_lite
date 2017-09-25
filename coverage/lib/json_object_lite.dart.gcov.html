@@ -31,9 +31,9 @@
             <td class="headerValue">coverage.lcov</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">57</td>
+            <td class="headerCovTableEntry">98</td>
             <td class="headerCovTableEntry">104</td>
-            <td class="headerCovTableEntryLo">54.8 %</td>
+            <td class="headerCovTableEntryHi">94.2 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
@@ -78,7 +78,7 @@
 <span class="lineNum">      16 </span>            : /// Debug logger
 <span class="lineNum">      17 </span>            : void _log(String obj) {
 <span class="lineNum">      18 </span>            :   if (enableJsonObjectLiteDebugMessages) {
-<span class="lineNum">      19 </span><span class="lineNoCov">          0 :     print(obj);</span>
+<span class="lineNum">      19 </span><span class="lineCov">          1 :     print(obj);</span>
 <span class="lineNum">      20 </span>            :   }
 <span class="lineNum">      21 </span>            : }
 <span class="lineNum">      22 </span>            : 
@@ -168,8 +168,8 @@
 <span class="lineNum">     106 </span>            :   Iterable toIterable() {
 <span class="lineNum">     107 </span><span class="lineCov">          2 :     if (_objectData is Iterable) {</span>
 <span class="lineNum">     108 </span><span class="lineCov">          1 :       return _objectData;</span>
-<span class="lineNum">     109 </span><span class="lineNoCov">          0 :     } else if (_objectData is Map) {</span>
-<span class="lineNum">     110 </span><span class="lineNoCov">          0 :       return _objectData.values;</span>
+<span class="lineNum">     109 </span><span class="lineCov">          2 :     } else if (_objectData is Map) {</span>
+<span class="lineNum">     110 </span><span class="lineCov">          2 :       return _objectData.values;</span>
 <span class="lineNum">     111 </span>            :     } else {
 <span class="lineNum">     112 </span><span class="lineNoCov">          0 :       return new List(); // return an empty list, rather than return null</span>
 <span class="lineNum">     113 </span>            : 
@@ -281,67 +281,67 @@
 <span class="lineNum">     219 </span>            :   /// Iterable implementation methods and properties
 <span class="lineNum">     220 </span>            :   ///
 <span class="lineNum">     221 </span>            : 
-<span class="lineNum">     222 </span><span class="lineNoCov">          0 :   bool any(bool f(dynamic element)) =&gt; this.toIterable().any(f);</span>
+<span class="lineNum">     222 </span><span class="lineCov">          2 :   bool any(bool f(dynamic element)) =&gt; this.toIterable().any(f);</span>
 <span class="lineNum">     223 </span>            : 
-<span class="lineNum">     224 </span><span class="lineNoCov">          0 :   bool contains(dynamic element) =&gt; this.toIterable().contains(element);</span>
+<span class="lineNum">     224 </span><span class="lineCov">          2 :   bool contains(dynamic element) =&gt; this.toIterable().contains(element);</span>
 <span class="lineNum">     225 </span>            : 
-<span class="lineNum">     226 </span><span class="lineNoCov">          0 :   E elementAt(int index) =&gt; this.toIterable().elementAt(index);</span>
+<span class="lineNum">     226 </span><span class="lineCov">          2 :   E elementAt(int index) =&gt; this.toIterable().elementAt(index);</span>
 <span class="lineNum">     227 </span>            : 
-<span class="lineNum">     228 </span><span class="lineNoCov">          0 :   bool every(bool f(dynamic element)) =&gt; this.toIterable().every(f);</span>
+<span class="lineNum">     228 </span><span class="lineCov">          2 :   bool every(bool f(dynamic element)) =&gt; this.toIterable().every(f);</span>
 <span class="lineNum">     229 </span>            : 
 <span class="lineNum">     230 </span>            :   Iterable&lt;T&gt; expand&lt;T&gt;(dynamic f(dynamic element)) =&gt;
-<span class="lineNum">     231 </span><span class="lineNoCov">          0 :       this.toIterable().expand(f);</span>
+<span class="lineNum">     231 </span><span class="lineCov">          2 :       this.toIterable().expand(f);</span>
 <span class="lineNum">     232 </span>            : 
 <span class="lineNum">     233 </span>            :   dynamic firstWhere(bool test(dynamic value), {dynamic orElse}) =&gt;
-<span class="lineNum">     234 </span><span class="lineNoCov">          0 :       this.toIterable().firstWhere(test, orElse: orElse);</span>
+<span class="lineNum">     234 </span><span class="lineCov">          2 :       this.toIterable().firstWhere(test, orElse: orElse);</span>
 <span class="lineNum">     235 </span>            : 
 <span class="lineNum">     236 </span>            :   T fold&lt;T&gt;(T initialValue, T combine(T a, dynamic b)) =&gt;
-<span class="lineNum">     237 </span><span class="lineNoCov">          0 :       this.toIterable().fold(initialValue, combine);</span>
+<span class="lineNum">     237 </span><span class="lineCov">          2 :       this.toIterable().fold(initialValue, combine);</span>
 <span class="lineNum">     238 </span>            : 
-<span class="lineNum">     239 </span><span class="lineNoCov">          0 :   String join([String separator = &quot;&quot;]) =&gt; this.toIterable().join(separator);</span>
+<span class="lineNum">     239 </span><span class="lineCov">          2 :   String join([String separator = &quot;&quot;]) =&gt; this.toIterable().join(separator);</span>
 <span class="lineNum">     240 </span>            : 
 <span class="lineNum">     241 </span>            :   dynamic lastWhere(bool test(dynamic value), {dynamic orElse}) =&gt;
-<span class="lineNum">     242 </span><span class="lineNoCov">          0 :       this.toIterable().firstWhere(test, orElse: orElse);</span>
+<span class="lineNum">     242 </span><span class="lineCov">          2 :       this.toIterable().firstWhere(test, orElse: orElse);</span>
 <span class="lineNum">     243 </span>            : 
 <span class="lineNum">     244 </span><span class="lineNoCov">          0 :   Iterable&lt;T&gt; map&lt;T&gt;(dynamic f(dynamic element)) =&gt; this.toIterable().map(f);</span>
 <span class="lineNum">     245 </span>            : 
 <span class="lineNum">     246 </span>            :   dynamic reduce(dynamic combine(dynamic value, dynamic element)) =&gt;
-<span class="lineNum">     247 </span><span class="lineNoCov">          0 :       this.toIterable().reduce(combine);</span>
+<span class="lineNum">     247 </span><span class="lineCov">          2 :       this.toIterable().reduce(combine);</span>
 <span class="lineNum">     248 </span>            : 
 <span class="lineNum">     249 </span>            :   dynamic singleWhere(bool test(dynamic value), {dynamic orElse}) =&gt;
-<span class="lineNum">     250 </span><span class="lineNoCov">          0 :       this.toIterable().firstWhere(test, orElse: orElse);</span>
+<span class="lineNum">     250 </span><span class="lineCov">          2 :       this.toIterable().firstWhere(test, orElse: orElse);</span>
 <span class="lineNum">     251 </span>            : 
-<span class="lineNum">     252 </span><span class="lineNoCov">          0 :   Iterable&lt;E&gt; skip(int n) =&gt; this.toIterable().skip(n);</span>
+<span class="lineNum">     252 </span><span class="lineCov">          2 :   Iterable&lt;E&gt; skip(int n) =&gt; this.toIterable().skip(n);</span>
 <span class="lineNum">     253 </span>            : 
 <span class="lineNum">     254 </span>            :   Iterable&lt;E&gt; skipWhile(bool test(dynamic value)) =&gt;
-<span class="lineNum">     255 </span><span class="lineNoCov">          0 :       this.toIterable().skipWhile(test);</span>
+<span class="lineNum">     255 </span><span class="lineCov">          2 :       this.toIterable().skipWhile(test);</span>
 <span class="lineNum">     256 </span>            : 
-<span class="lineNum">     257 </span><span class="lineNoCov">          0 :   Iterable&lt;E&gt; take(int n) =&gt; this.toIterable().take(n);</span>
+<span class="lineNum">     257 </span><span class="lineCov">          2 :   Iterable&lt;E&gt; take(int n) =&gt; this.toIterable().take(n);</span>
 <span class="lineNum">     258 </span>            : 
 <span class="lineNum">     259 </span>            :   Iterable&lt;E&gt; takeWhile(bool test(dynamic value)) =&gt;
-<span class="lineNum">     260 </span><span class="lineNoCov">          0 :       this.toIterable().takeWhile(test);</span>
+<span class="lineNum">     260 </span><span class="lineCov">          2 :       this.toIterable().takeWhile(test);</span>
 <span class="lineNum">     261 </span>            : 
 <span class="lineNum">     262 </span>            :   List&lt;dynamic&gt; toList({bool growable: true}) =&gt;
-<span class="lineNum">     263 </span><span class="lineNoCov">          0 :       this.toIterable().toList(growable: growable);</span>
+<span class="lineNum">     263 </span><span class="lineCov">          2 :       this.toIterable().toList(growable: growable);</span>
 <span class="lineNum">     264 </span>            : 
-<span class="lineNum">     265 </span><span class="lineNoCov">          0 :   Set&lt;dynamic&gt; toSet() =&gt; this.toIterable().toSet();</span>
+<span class="lineNum">     265 </span><span class="lineCov">          2 :   Set&lt;dynamic&gt; toSet() =&gt; this.toIterable().toSet();</span>
 <span class="lineNum">     266 </span>            : 
-<span class="lineNum">     267 </span><span class="lineNoCov">          0 :   Iterable&lt;E&gt; where(bool f(dynamic element)) =&gt; this.toIterable().where(f);</span>
+<span class="lineNum">     267 </span><span class="lineCov">          2 :   Iterable&lt;E&gt; where(bool f(dynamic element)) =&gt; this.toIterable().where(f);</span>
 <span class="lineNum">     268 </span>            : 
-<span class="lineNum">     269 </span><span class="lineNoCov">          0 :   E get first =&gt; this.toIterable().first;</span>
+<span class="lineNum">     269 </span><span class="lineCov">          2 :   E get first =&gt; this.toIterable().first;</span>
 <span class="lineNum">     270 </span>            : 
-<span class="lineNum">     271 </span><span class="lineNoCov">          0 :   Iterator&lt;E&gt; get iterator =&gt; this.toIterable().iterator;</span>
+<span class="lineNum">     271 </span><span class="lineCov">          2 :   Iterator&lt;E&gt; get iterator =&gt; this.toIterable().iterator;</span>
 <span class="lineNum">     272 </span>            : 
-<span class="lineNum">     273 </span><span class="lineNoCov">          0 :   E get last =&gt; this.toIterable().last;</span>
+<span class="lineNum">     273 </span><span class="lineCov">          2 :   E get last =&gt; this.toIterable().last;</span>
 <span class="lineNum">     274 </span>            : 
-<span class="lineNum">     275 </span><span class="lineNoCov">          0 :   E get single =&gt; this.toIterable().single;</span>
+<span class="lineNum">     275 </span><span class="lineCov">          2 :   E get single =&gt; this.toIterable().single;</span>
 <span class="lineNum">     276 </span>            : 
 <span class="lineNum">     277 </span>            :   ///
 <span class="lineNum">     278 </span>            :   /// Map implementation methods and properties *
 <span class="lineNum">     279 </span>            :   ///
 <span class="lineNum">     280 </span>            : 
 <span class="lineNum">     281 </span>            :   // Pass through to the inner _objectData map.
-<span class="lineNum">     282 </span><span class="lineNoCov">          0 :   bool containsValue(dynamic value) =&gt; _objectData.containsValue(value);</span>
+<span class="lineNum">     282 </span><span class="lineCov">          2 :   bool containsValue(dynamic value) =&gt; _objectData.containsValue(value);</span>
 <span class="lineNum">     283 </span>            : 
 <span class="lineNum">     284 </span>            :   // Pass through to the inner _objectData map.
 <span class="lineNum">     285 </span>            :   bool containsKey(dynamic value) {
@@ -349,7 +349,7 @@
 <span class="lineNum">     287 </span>            :   }
 <span class="lineNum">     288 </span>            : 
 <span class="lineNum">     289 </span>            :   // Pass through to the innter _objectData map.
-<span class="lineNum">     290 </span><span class="lineNoCov">          0 :   bool get isNotEmpty =&gt; _objectData.isNotEmpty;</span>
+<span class="lineNum">     290 </span><span class="lineCov">          2 :   bool get isNotEmpty =&gt; _objectData.isNotEmpty;</span>
 <span class="lineNum">     291 </span>            : 
 <span class="lineNum">     292 </span>            :   // Pass through to the inner _objectData map.
 <span class="lineNum">     293 </span><span class="lineCov">          2 :   dynamic operator [](dynamic key) =&gt; _objectData[key];</span>
@@ -359,10 +359,10 @@
 <span class="lineNum">     297 </span><span class="lineCov">          2 :       _objectData.forEach(func);</span>
 <span class="lineNum">     298 </span>            : 
 <span class="lineNum">     299 </span>            :   // Pass through to the inner _objectData map.
-<span class="lineNum">     300 </span><span class="lineNoCov">          0 :   Iterable get keys =&gt; _objectData.keys;</span>
+<span class="lineNum">     300 </span><span class="lineCov">          2 :   Iterable get keys =&gt; _objectData.keys;</span>
 <span class="lineNum">     301 </span>            : 
 <span class="lineNum">     302 </span>            :   // Pass through to the inner _objectData map.
-<span class="lineNum">     303 </span><span class="lineNoCov">          0 :   Iterable get values =&gt; _objectData.values;</span>
+<span class="lineNum">     303 </span><span class="lineCov">          2 :   Iterable get values =&gt; _objectData.values;</span>
 <span class="lineNum">     304 </span>            : 
 <span class="lineNum">     305 </span>            :   // Pass through to the inner _objectData map.
 <span class="lineNum">     306 </span><span class="lineCov">          2 :   int get length =&gt; _objectData.length;</span>
@@ -371,7 +371,7 @@
 <span class="lineNum">     309 </span><span class="lineCov">          2 :   bool get isEmpty =&gt; _objectData.isEmpty;</span>
 <span class="lineNum">     310 </span>            : 
 <span class="lineNum">     311 </span>            :   // Pass through to the inner _objectData map.
-<span class="lineNum">     312 </span><span class="lineNoCov">          0 :   void addAll(dynamic items) =&gt; _objectData.addAll(items);</span>
+<span class="lineNum">     312 </span><span class="lineCov">          2 :   void addAll(dynamic items) =&gt; _objectData.addAll(items);</span>
 <span class="lineNum">     313 </span>            : 
 <span class="lineNum">     314 </span>            :   /// Specific implementations which check isImmtable to determine if an
 <span class="lineNum">     315 </span>            :   /// unknown key should be allowed.
@@ -382,11 +382,11 @@
 <span class="lineNum">     320 </span>            :   /// key
 <span class="lineNum">     321 </span>            :   void operator []=(dynamic key, dynamic value) {
 <span class="lineNum">     322 </span>            :     // If the map is not immutable, or it already contains the key, then
-<span class="lineNum">     323 </span><span class="lineCov">          2 :     if (this.isImmutable == false || this.containsKey(key)) {</span>
+<span class="lineNum">     323 </span><span class="lineCov">          3 :     if (this.isImmutable == false || this.containsKey(key)) {</span>
 <span class="lineNum">     324 </span>            :       //allow the edit, as we don't care if it's a new key or not
 <span class="lineNum">     325 </span><span class="lineCov">          2 :       return _objectData[key] = value;</span>
 <span class="lineNum">     326 </span>            :     } else {
-<span class="lineNum">     327 </span><span class="lineNoCov">          0 :       throw new JsonObjectLiteException(&quot;JsonObject is not extendable&quot;);</span>
+<span class="lineNum">     327 </span><span class="lineCov">          1 :       throw new JsonObjectLiteException(&quot;JsonObject is not extendable&quot;);</span>
 <span class="lineNum">     328 </span>            :     }
 <span class="lineNum">     329 </span>            :   }
 <span class="lineNum">     330 </span>            : 
@@ -395,8 +395,8 @@
 <span class="lineNum">     333 </span>            :   /// Throw [JsonObjectLiteException] if we're not allowed to add a new
 <span class="lineNum">     334 </span>            :   /// key
 <span class="lineNum">     335 </span>            :   void putIfAbsent(dynamic key, ifAbsent()) {
-<span class="lineNum">     336 </span><span class="lineNoCov">          0 :     if (this.isImmutable == false || this.containsKey(key)) {</span>
-<span class="lineNum">     337 </span><span class="lineNoCov">          0 :       return _objectData.putIfAbsent(key, ifAbsent);</span>
+<span class="lineNum">     336 </span><span class="lineCov">          2 :     if (this.isImmutable == false || this.containsKey(key)) {</span>
+<span class="lineNum">     337 </span><span class="lineCov">          2 :       return _objectData.putIfAbsent(key, ifAbsent);</span>
 <span class="lineNum">     338 </span>            :     } else {
 <span class="lineNum">     339 </span><span class="lineNoCov">          0 :       throw new JsonObjectLiteException(&quot;JsonObject is not extendable&quot;);</span>
 <span class="lineNum">     340 </span>            :     }
@@ -406,9 +406,9 @@
 <span class="lineNum">     344 </span>            :   /// then allow the removal.
 <span class="lineNum">     345 </span>            :   /// Throw [JsonObjectLiteException] if we're not allowed to remove a
 <span class="lineNum">     346 </span>            :   /// key
-<span class="lineNum">     347 </span>            :   bool remove(dynamic key) {
-<span class="lineNum">     348 </span><span class="lineNoCov">          0 :     if (this.isImmutable == false || this.containsKey(key)) {</span>
-<span class="lineNum">     349 </span><span class="lineNoCov">          0 :       return _objectData.remove(key);</span>
+<span class="lineNum">     347 </span>            :   dynamic remove(dynamic key) {
+<span class="lineNum">     348 </span><span class="lineCov">          2 :     if (this.isImmutable == false || this.containsKey(key)) {</span>
+<span class="lineNum">     349 </span><span class="lineCov">          2 :       return _objectData.remove(key);</span>
 <span class="lineNum">     350 </span>            :     } else {
 <span class="lineNum">     351 </span><span class="lineNoCov">          0 :       throw new JsonObjectLiteException(&quot;JsonObject is not extendable&quot;);</span>
 <span class="lineNum">     352 </span>            :     }
@@ -417,8 +417,8 @@
 <span class="lineNum">     355 </span>            :   /// If [isImmutable] is false, then allow the map to be cleared
 <span class="lineNum">     356 </span>            :   /// Throw [JsonObjectLiteException] if we're not allowed to clear.
 <span class="lineNum">     357 </span>            :   void clear() {
-<span class="lineNum">     358 </span><span class="lineNoCov">          0 :     if (this.isExtendable == false) {</span>
-<span class="lineNum">     359 </span><span class="lineNoCov">          0 :       _objectData.clear();</span>
+<span class="lineNum">     358 </span><span class="lineCov">          2 :     if (this.isImmutable == false) {</span>
+<span class="lineNum">     359 </span><span class="lineCov">          2 :       _objectData.clear();</span>
 <span class="lineNum">     360 </span>            :     } else {
 <span class="lineNum">     361 </span><span class="lineNoCov">          0 :       throw new JsonObjectLiteException(&quot;JsonObject is not extendable&quot;);</span>
 <span class="lineNum">     362 </span>            :     }
@@ -427,10 +427,10 @@
 <span class="lineNum">     365 </span>            : 
 <span class="lineNum">     366 </span>            : /// Exception class thrown by JsonObjectLite
 <span class="lineNum">     367 </span>            : class JsonObjectLiteException implements Exception {
-<span class="lineNum">     368 </span><span class="lineNoCov">          0 :   const JsonObjectLiteException([String message]) : this._message = message;</span>
-<span class="lineNum">     369 </span><span class="lineNoCov">          0 :   String toString() =&gt; (this._message != null</span>
-<span class="lineNum">     370 </span><span class="lineNoCov">          0 :       ? &quot;JsonObjectException: $_message&quot;</span>
-<span class="lineNum">     371 </span><span class="lineNoCov">          0 :       : &quot;JsonObjectException&quot;);</span>
+<span class="lineNum">     368 </span><span class="lineCov">          1 :   const JsonObjectLiteException([String message]) : this._message = message;</span>
+<span class="lineNum">     369 </span><span class="lineCov">          1 :   String toString() =&gt; (this._message != null</span>
+<span class="lineNum">     370 </span><span class="lineCov">          1 :       ? &quot;JsonObjectException: $_message&quot;</span>
+<span class="lineNum">     371 </span><span class="lineCov">          1 :       : &quot;JsonObjectException&quot;);</span>
 <span class="lineNum">     372 </span>            :   final String _message;
 <span class="lineNum">     373 </span>            : }
 </pre>
