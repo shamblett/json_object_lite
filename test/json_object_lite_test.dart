@@ -371,9 +371,59 @@ void main() {
       }
       expect(o.iterator, new isInstanceOf<_CompactIterator>());
     });
+
+    test("Map", () {
+      final JsonObjectLite o = new JsonObjectLite();
+      o.isImmutable = false;
+      o.name = "Steve";
+      o.age = 55;
+      o.sex = "male";
+      o.languages = ["dart", "c", "c++"];
+      expect(o.containsValue("Steve"), isTrue);
+      expect(o.containsKey("languages"), isTrue);
+      expect(o.isNotEmpty, isTrue);
+      expect(o.isEmpty, isFalse);
+      expect(o["name"], "Steve");
+      o.forEach((dynamic key, dynamic value) {
+        print("$key = $value");
+      });
+      expect(o.keys.toList(), ['name', 'age', 'sex', 'languages']);
+      expect(o.values.toList(), ['Steve', 55, 'male', ['dart', 'c', 'c++']]);
+      expect(o.length, 4);
+      final Map items = {"pets": "none", "colour": "white"};
+      o.addAll(items);
+      expect(o.length, 6);
+      expect(o.pets, "none");
+      expect(o.colour, "white");
+      o["middleName"] = "James";
+      expect(o.middleName, "James");
+      o.putIfAbsent("house", () => 6);
+      expect(o.house, 6);
+      final dynamic ret = o.remove("house");
+      expect(ret, 6);
+      expect(o.keys.toList(),
+          ['name', 'age', 'sex', 'languages', 'pets', 'colour', 'middleName']);
+      o.clear();
+      expect(o.length, 0);
+    });
   });
 
   group("Utility", () {
+    test("Exceptions", () {
+      final o = new JsonObjectLite();
+      o.isImmutable = true;
+      bool thrown = false;
+      try {
+        o['name'] = "fred";
+      } catch (ex) {
+        expect(ex, new isInstanceOf<JsonObjectLiteException>());
+        expect(
+            ex.toString(), "JsonObjectException: JsonObject is not extendable");
+        thrown = true;
+      }
+      expect(thrown, true);
+    });
+
     test("Debug", () {
       enableJsonObjectLiteDebugMessages = true;
       final o = new JsonObjectLite();
