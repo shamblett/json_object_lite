@@ -91,7 +91,15 @@ class JsonObjectLite<E> extends Object implements Map, Iterable {
   /// or [JsonObjectLite.fromMap()].
   /// The default constructor [JsonObjectLite()], sets this value to
   /// true.
-  bool isImmutable;
+  set isImmutable(bool state) => isExtendable = !state;
+
+  bool get isImmutable => !isExtendable;
+
+  @deprecated
+
+  /// For compatibility the isExtendable boolean is preserved, however new usage
+  /// should use isImmutable above. Usage is as per JsonObject.
+  bool isExtendable;
 
   /// Returns a string representation of the underlying object data
   String toString() {
