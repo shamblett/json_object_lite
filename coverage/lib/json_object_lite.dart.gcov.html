@@ -31,8 +31,8 @@
             <td class="headerValue">coverage.lcov</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">102</td>
-            <td class="headerCovTableEntry">102</td>
+            <td class="headerCovTableEntry">104</td>
+            <td class="headerCovTableEntry">104</td>
             <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr>
@@ -153,280 +153,288 @@
 <span class="lineNum">      91 </span>            :   /// or [JsonObjectLite.fromMap()].
 <span class="lineNum">      92 </span>            :   /// The default constructor [JsonObjectLite()], sets this value to
 <span class="lineNum">      93 </span>            :   /// true.
-<span class="lineNum">      94 </span>            :   bool isImmutable;
+<span class="lineNum">      94 </span><span class="lineCov">          1 :   set isImmutable(bool state) =&gt; isExtendable = !state;</span>
 <span class="lineNum">      95 </span>            : 
-<span class="lineNum">      96 </span>            :   /// Returns a string representation of the underlying object data
-<span class="lineNum">      97 </span>            :   String toString() {
-<span class="lineNum">      98 </span><span class="lineCov">          3 :     return encoder.convert(_objectData);</span>
-<span class="lineNum">      99 </span>            :   }
-<span class="lineNum">     100 </span>            : 
-<span class="lineNum">     101 </span>            :   /// Returns either the underlying parsed data as an iterable list (if the
-<span class="lineNum">     102 </span>            :   /// underlying data contains a list), or returns the map.values (if the
-<span class="lineNum">     103 </span>            :   /// underlying data contains a map).
-<span class="lineNum">     104 </span>            :   Iterable toIterable() {
-<span class="lineNum">     105 </span><span class="lineCov">          2 :     if (_objectData is Iterable) {</span>
-<span class="lineNum">     106 </span><span class="lineCov">          1 :       return _objectData;</span>
-<span class="lineNum">     107 </span>            :     }
-<span class="lineNum">     108 </span><span class="lineCov">          2 :     return _objectData.values;</span>
-<span class="lineNum">     109 </span>            :   }
-<span class="lineNum">     110 </span>            : 
-<span class="lineNum">     111 </span>            :   /// noSuchMethod()
-<span class="lineNum">     112 </span>            :   /// If we try to access a property using dot notation (eg: o.wibble ), then
-<span class="lineNum">     113 </span>            :   /// noSuchMethod will be invoked, and identify the getter or setter name.
-<span class="lineNum">     114 </span>            :   /// It then looks up in the map contained in _objectData (represented using
-<span class="lineNum">     115 </span>            :   /// this (as this class implements [Map], and forwards it's calls to that
-<span class="lineNum">     116 </span>            :   /// class.
-<span class="lineNum">     117 </span>            :   /// If it finds the getter or setter then it either updates the value, or
-<span class="lineNum">     118 </span>            :   /// replaces the value.
-<span class="lineNum">     119 </span>            :   ///
-<span class="lineNum">     120 </span>            :   /// If isImmutable = true, then it will disallow the property access
-<span class="lineNum">     121 </span>            :   /// even if the property doesn't yet exist.
-<span class="lineNum">     122 </span>            :   dynamic noSuchMethod(Invocation mirror) {
-<span class="lineNum">     123 </span>            :     int positionalArgs = 0;
-<span class="lineNum">     124 </span><span class="lineCov">          1 :     if (mirror.positionalArguments != null)</span>
-<span class="lineNum">     125 </span><span class="lineCov">          2 :       positionalArgs = mirror.positionalArguments.length;</span>
-<span class="lineNum">     126 </span>            :     String property = &quot;Not Found&quot;;
-<span class="lineNum">     127 </span>            : 
-<span class="lineNum">     128 </span><span class="lineCov">          2 :     if (mirror.isGetter &amp;&amp; (positionalArgs == 0)) {</span>
-<span class="lineNum">     129 </span>            :       // Synthetic getter
-<span class="lineNum">     130 </span><span class="lineCov">          2 :       property = _symbolToString(mirror.memberName);</span>
-<span class="lineNum">     131 </span><span class="lineCov">          1 :       if (this.containsKey(property)) {</span>
-<span class="lineNum">     132 </span><span class="lineCov">          1 :         return this[property];</span>
-<span class="lineNum">     133 </span>            :       }
-<span class="lineNum">     134 </span><span class="lineCov">          2 :     } else if (mirror.isSetter &amp;&amp; positionalArgs == 1) {</span>
-<span class="lineNum">     135 </span>            :       // Synthetic setter
-<span class="lineNum">     136 </span>            :       // If the property doesn't exist, it will only be added
-<span class="lineNum">     137 </span>            :       // if isImmutable = false
-<span class="lineNum">     138 </span><span class="lineCov">          2 :       property = _symbolToString(mirror.memberName, true);</span>
-<span class="lineNum">     139 </span><span class="lineCov">          1 :       if (!isImmutable) {</span>
-<span class="lineNum">     140 </span><span class="lineCov">          3 :         this[property] = mirror.positionalArguments[0];</span>
+<span class="lineNum">      96 </span><span class="lineCov">          1 :   bool get isImmutable =&gt; !isExtendable;</span>
+<span class="lineNum">      97 </span>            : 
+<span class="lineNum">      98 </span>            :   @deprecated
+<span class="lineNum">      99 </span>            : 
+<span class="lineNum">     100 </span>            :   /// For compatibility the isExtendable boolean is preserved, however new usage
+<span class="lineNum">     101 </span>            :   /// should use isImmutable above. Usage is as per JsonObject.
+<span class="lineNum">     102 </span>            :   bool isExtendable;
+<span class="lineNum">     103 </span>            : 
+<span class="lineNum">     104 </span>            :   /// Returns a string representation of the underlying object data
+<span class="lineNum">     105 </span>            :   String toString() {
+<span class="lineNum">     106 </span><span class="lineCov">          3 :     return encoder.convert(_objectData);</span>
+<span class="lineNum">     107 </span>            :   }
+<span class="lineNum">     108 </span>            : 
+<span class="lineNum">     109 </span>            :   /// Returns either the underlying parsed data as an iterable list (if the
+<span class="lineNum">     110 </span>            :   /// underlying data contains a list), or returns the map.values (if the
+<span class="lineNum">     111 </span>            :   /// underlying data contains a map).
+<span class="lineNum">     112 </span>            :   Iterable toIterable() {
+<span class="lineNum">     113 </span><span class="lineCov">          2 :     if (_objectData is Iterable) {</span>
+<span class="lineNum">     114 </span><span class="lineCov">          1 :       return _objectData;</span>
+<span class="lineNum">     115 </span>            :     }
+<span class="lineNum">     116 </span><span class="lineCov">          2 :     return _objectData.values;</span>
+<span class="lineNum">     117 </span>            :   }
+<span class="lineNum">     118 </span>            : 
+<span class="lineNum">     119 </span>            :   /// noSuchMethod()
+<span class="lineNum">     120 </span>            :   /// If we try to access a property using dot notation (eg: o.wibble ), then
+<span class="lineNum">     121 </span>            :   /// noSuchMethod will be invoked, and identify the getter or setter name.
+<span class="lineNum">     122 </span>            :   /// It then looks up in the map contained in _objectData (represented using
+<span class="lineNum">     123 </span>            :   /// this (as this class implements [Map], and forwards it's calls to that
+<span class="lineNum">     124 </span>            :   /// class.
+<span class="lineNum">     125 </span>            :   /// If it finds the getter or setter then it either updates the value, or
+<span class="lineNum">     126 </span>            :   /// replaces the value.
+<span class="lineNum">     127 </span>            :   ///
+<span class="lineNum">     128 </span>            :   /// If isImmutable = true, then it will disallow the property access
+<span class="lineNum">     129 </span>            :   /// even if the property doesn't yet exist.
+<span class="lineNum">     130 </span>            :   dynamic noSuchMethod(Invocation mirror) {
+<span class="lineNum">     131 </span>            :     int positionalArgs = 0;
+<span class="lineNum">     132 </span><span class="lineCov">          1 :     if (mirror.positionalArguments != null)</span>
+<span class="lineNum">     133 </span><span class="lineCov">          2 :       positionalArgs = mirror.positionalArguments.length;</span>
+<span class="lineNum">     134 </span>            :     String property = &quot;Not Found&quot;;
+<span class="lineNum">     135 </span>            : 
+<span class="lineNum">     136 </span><span class="lineCov">          2 :     if (mirror.isGetter &amp;&amp; (positionalArgs == 0)) {</span>
+<span class="lineNum">     137 </span>            :       // Synthetic getter
+<span class="lineNum">     138 </span><span class="lineCov">          2 :       property = _symbolToString(mirror.memberName);</span>
+<span class="lineNum">     139 </span><span class="lineCov">          1 :       if (this.containsKey(property)) {</span>
+<span class="lineNum">     140 </span><span class="lineCov">          1 :         return this[property];</span>
 <span class="lineNum">     141 </span>            :       }
-<span class="lineNum">     142 </span><span class="lineCov">          1 :       return this[property];</span>
-<span class="lineNum">     143 </span>            :     }
-<span class="lineNum">     144 </span>            : 
-<span class="lineNum">     145 </span>            :     // If we get here, then we've not found it - throw.
-<span class="lineNum">     146 </span><span class="lineCov">          2 :     _log(&quot;noSuchMethod:: Not found: ${property}&quot;);</span>
-<span class="lineNum">     147 </span><span class="lineCov">          3 :     _log(&quot;noSuchMethod:: IsGetter: ${mirror.isGetter}&quot;);</span>
-<span class="lineNum">     148 </span><span class="lineCov">          3 :     _log(&quot;noSuchMethod:: IsSetter: ${mirror.isGetter}&quot;);</span>
-<span class="lineNum">     149 </span><span class="lineCov">          3 :     _log(&quot;noSuchMethod:: isAccessor: ${mirror.isAccessor}&quot;);</span>
-<span class="lineNum">     150 </span><span class="lineCov">          1 :     return super.noSuchMethod(mirror);</span>
-<span class="lineNum">     151 </span>            :   }
+<span class="lineNum">     142 </span><span class="lineCov">          2 :     } else if (mirror.isSetter &amp;&amp; positionalArgs == 1) {</span>
+<span class="lineNum">     143 </span>            :       // Synthetic setter
+<span class="lineNum">     144 </span>            :       // If the property doesn't exist, it will only be added
+<span class="lineNum">     145 </span>            :       // if isImmutable = false
+<span class="lineNum">     146 </span><span class="lineCov">          2 :       property = _symbolToString(mirror.memberName, true);</span>
+<span class="lineNum">     147 </span><span class="lineCov">          1 :       if (!isImmutable) {</span>
+<span class="lineNum">     148 </span><span class="lineCov">          3 :         this[property] = mirror.positionalArguments[0];</span>
+<span class="lineNum">     149 </span>            :       }
+<span class="lineNum">     150 </span><span class="lineCov">          1 :       return this[property];</span>
+<span class="lineNum">     151 </span>            :     }
 <span class="lineNum">     152 </span>            : 
-<span class="lineNum">     153 </span>            :   /// If the object passed in is a MAP, then we iterate through each of
-<span class="lineNum">     154 </span>            :   /// the values of the map, and if any value is a map, then we create a new
-<span class="lineNum">     155 </span>            :   /// [JsonObjectLite] replacing that map in the original data with that [JsonObjectLite]
-<span class="lineNum">     156 </span>            :   /// to a new [JsonObjectLite].  If the value is a Collection, then we call this
-<span class="lineNum">     157 </span>            :   /// function recursively.
-<span class="lineNum">     158 </span>            :   ///
-<span class="lineNum">     159 </span>            :   /// If the object passed in is a Collection, then we iterate through
-<span class="lineNum">     160 </span>            :   /// each item.  If that item is a map, then we replace the item with a
-<span class="lineNum">     161 </span>            :   /// [JsonObjectLite] created from the map.  If the item is a Collection, then we
-<span class="lineNum">     162 </span>            :   /// call this function recursively.
-<span class="lineNum">     163 </span>            :   ///
-<span class="lineNum">     164 </span>            :   void _extractElements(data) {
-<span class="lineNum">     165 </span><span class="lineCov">          1 :     if (data is Map) {</span>
-<span class="lineNum">     166 </span>            :       // Iterate through each of the k,v pairs, replacing maps with jsonObjects
-<span class="lineNum">     167 </span><span class="lineCov">          1 :       data.forEach((key, value) {</span>
-<span class="lineNum">     168 </span><span class="lineCov">          1 :         if (value is Map) {</span>
-<span class="lineNum">     169 </span>            :           // Replace the existing Map with a JsonObject
-<span class="lineNum">     170 </span><span class="lineCov">          2 :           data[key] = new JsonObjectLite.fromMap(value);</span>
-<span class="lineNum">     171 </span><span class="lineCov">          1 :         } else if (value is List) {</span>
-<span class="lineNum">     172 </span>            :           // Recurse
-<span class="lineNum">     173 </span><span class="lineCov">          1 :           _extractElements(value);</span>
-<span class="lineNum">     174 </span>            :         }
-<span class="lineNum">     175 </span>            :       });
-<span class="lineNum">     176 </span><span class="lineCov">          1 :     } else if (data is List) {</span>
-<span class="lineNum">     177 </span>            :       // Iterate through each of the items
-<span class="lineNum">     178 </span>            :       // If any of them is a list, check to see if it contains a map
-<span class="lineNum">     179 </span>            : 
-<span class="lineNum">     180 </span><span class="lineCov">          3 :       for (int i = 0; i &lt; data.length; i++) {</span>
-<span class="lineNum">     181 </span>            :         // Use the for loop so that we can index the item to replace it if req'd
-<span class="lineNum">     182 </span><span class="lineCov">          1 :         final listItem = data[i];</span>
-<span class="lineNum">     183 </span><span class="lineCov">          1 :         if (listItem is List) {</span>
-<span class="lineNum">     184 </span>            :           // Recurse
-<span class="lineNum">     185 </span><span class="lineCov">          1 :           _extractElements(listItem);</span>
-<span class="lineNum">     186 </span><span class="lineCov">          1 :         } else if (listItem is Map) {</span>
-<span class="lineNum">     187 </span>            :           // Replace the existing Map with a JsonObject
-<span class="lineNum">     188 </span><span class="lineCov">          2 :           data[i] = new JsonObjectLite.fromMap(listItem);</span>
-<span class="lineNum">     189 </span>            :         }
-<span class="lineNum">     190 </span>            :       }
-<span class="lineNum">     191 </span>            :     }
-<span class="lineNum">     192 </span>            :   }
-<span class="lineNum">     193 </span>            : 
-<span class="lineNum">     194 </span>            :   /// Convert the incoming method name(symbol) into a string, without using mirrors.
-<span class="lineNum">     195 </span>            :   String _symbolToString(dynamic value, [bool isSetter = false]) {
-<span class="lineNum">     196 </span>            :     String ret;
-<span class="lineNum">     197 </span><span class="lineCov">          1 :     if (value is Symbol) {</span>
-<span class="lineNum">     198 </span>            :       // Brittle but we avoid mirrors
-<span class="lineNum">     199 </span><span class="lineCov">          1 :       final String name = value.toString();</span>
-<span class="lineNum">     200 </span><span class="lineCov">          4 :       ret = name.substring((name.indexOf('&quot;') + 1), name.lastIndexOf('&quot;'));</span>
-<span class="lineNum">     201 </span>            :       // Setters have an '=' on the end, remove it
-<span class="lineNum">     202 </span>            :       if (isSetter) {
-<span class="lineNum">     203 </span><span class="lineCov">          3 :         ret = ret.replaceFirst(&quot;=&quot;, &quot;&quot;, ret.length - 1);</span>
-<span class="lineNum">     204 </span>            :       }
-<span class="lineNum">     205 </span>            :     } else {
-<span class="lineNum">     206 </span><span class="lineCov">          1 :       ret = value.toString();</span>
-<span class="lineNum">     207 </span>            :     }
-<span class="lineNum">     208 </span><span class="lineCov">          2 :     _log(&quot;_symbolToString:: Method name is: ${ret}&quot;);</span>
-<span class="lineNum">     209 </span>            :     return ret;
-<span class="lineNum">     210 </span>            :   }
-<span class="lineNum">     211 </span>            : 
-<span class="lineNum">     212 </span>            :   ///
-<span class="lineNum">     213 </span>            :   /// Iterable implementation methods and properties
-<span class="lineNum">     214 </span>            :   ///
-<span class="lineNum">     215 </span>            : 
-<span class="lineNum">     216 </span><span class="lineCov">          2 :   bool any(bool f(dynamic element)) =&gt; this.toIterable().any(f);</span>
-<span class="lineNum">     217 </span>            : 
-<span class="lineNum">     218 </span><span class="lineCov">          2 :   bool contains(dynamic element) =&gt; this.toIterable().contains(element);</span>
+<span class="lineNum">     153 </span>            :     // If we get here, then we've not found it - throw.
+<span class="lineNum">     154 </span><span class="lineCov">          2 :     _log(&quot;noSuchMethod:: Not found: ${property}&quot;);</span>
+<span class="lineNum">     155 </span><span class="lineCov">          3 :     _log(&quot;noSuchMethod:: IsGetter: ${mirror.isGetter}&quot;);</span>
+<span class="lineNum">     156 </span><span class="lineCov">          3 :     _log(&quot;noSuchMethod:: IsSetter: ${mirror.isGetter}&quot;);</span>
+<span class="lineNum">     157 </span><span class="lineCov">          3 :     _log(&quot;noSuchMethod:: isAccessor: ${mirror.isAccessor}&quot;);</span>
+<span class="lineNum">     158 </span><span class="lineCov">          1 :     return super.noSuchMethod(mirror);</span>
+<span class="lineNum">     159 </span>            :   }
+<span class="lineNum">     160 </span>            : 
+<span class="lineNum">     161 </span>            :   /// If the object passed in is a MAP, then we iterate through each of
+<span class="lineNum">     162 </span>            :   /// the values of the map, and if any value is a map, then we create a new
+<span class="lineNum">     163 </span>            :   /// [JsonObjectLite] replacing that map in the original data with that [JsonObjectLite]
+<span class="lineNum">     164 </span>            :   /// to a new [JsonObjectLite].  If the value is a Collection, then we call this
+<span class="lineNum">     165 </span>            :   /// function recursively.
+<span class="lineNum">     166 </span>            :   ///
+<span class="lineNum">     167 </span>            :   /// If the object passed in is a Collection, then we iterate through
+<span class="lineNum">     168 </span>            :   /// each item.  If that item is a map, then we replace the item with a
+<span class="lineNum">     169 </span>            :   /// [JsonObjectLite] created from the map.  If the item is a Collection, then we
+<span class="lineNum">     170 </span>            :   /// call this function recursively.
+<span class="lineNum">     171 </span>            :   ///
+<span class="lineNum">     172 </span>            :   void _extractElements(data) {
+<span class="lineNum">     173 </span><span class="lineCov">          1 :     if (data is Map) {</span>
+<span class="lineNum">     174 </span>            :       // Iterate through each of the k,v pairs, replacing maps with jsonObjects
+<span class="lineNum">     175 </span><span class="lineCov">          1 :       data.forEach((key, value) {</span>
+<span class="lineNum">     176 </span><span class="lineCov">          1 :         if (value is Map) {</span>
+<span class="lineNum">     177 </span>            :           // Replace the existing Map with a JsonObject
+<span class="lineNum">     178 </span><span class="lineCov">          2 :           data[key] = new JsonObjectLite.fromMap(value);</span>
+<span class="lineNum">     179 </span><span class="lineCov">          1 :         } else if (value is List) {</span>
+<span class="lineNum">     180 </span>            :           // Recurse
+<span class="lineNum">     181 </span><span class="lineCov">          1 :           _extractElements(value);</span>
+<span class="lineNum">     182 </span>            :         }
+<span class="lineNum">     183 </span>            :       });
+<span class="lineNum">     184 </span><span class="lineCov">          1 :     } else if (data is List) {</span>
+<span class="lineNum">     185 </span>            :       // Iterate through each of the items
+<span class="lineNum">     186 </span>            :       // If any of them is a list, check to see if it contains a map
+<span class="lineNum">     187 </span>            : 
+<span class="lineNum">     188 </span><span class="lineCov">          3 :       for (int i = 0; i &lt; data.length; i++) {</span>
+<span class="lineNum">     189 </span>            :         // Use the for loop so that we can index the item to replace it if req'd
+<span class="lineNum">     190 </span><span class="lineCov">          1 :         final listItem = data[i];</span>
+<span class="lineNum">     191 </span><span class="lineCov">          1 :         if (listItem is List) {</span>
+<span class="lineNum">     192 </span>            :           // Recurse
+<span class="lineNum">     193 </span><span class="lineCov">          1 :           _extractElements(listItem);</span>
+<span class="lineNum">     194 </span><span class="lineCov">          1 :         } else if (listItem is Map) {</span>
+<span class="lineNum">     195 </span>            :           // Replace the existing Map with a JsonObject
+<span class="lineNum">     196 </span><span class="lineCov">          2 :           data[i] = new JsonObjectLite.fromMap(listItem);</span>
+<span class="lineNum">     197 </span>            :         }
+<span class="lineNum">     198 </span>            :       }
+<span class="lineNum">     199 </span>            :     }
+<span class="lineNum">     200 </span>            :   }
+<span class="lineNum">     201 </span>            : 
+<span class="lineNum">     202 </span>            :   /// Convert the incoming method name(symbol) into a string, without using mirrors.
+<span class="lineNum">     203 </span>            :   String _symbolToString(dynamic value, [bool isSetter = false]) {
+<span class="lineNum">     204 </span>            :     String ret;
+<span class="lineNum">     205 </span><span class="lineCov">          1 :     if (value is Symbol) {</span>
+<span class="lineNum">     206 </span>            :       // Brittle but we avoid mirrors
+<span class="lineNum">     207 </span><span class="lineCov">          1 :       final String name = value.toString();</span>
+<span class="lineNum">     208 </span><span class="lineCov">          4 :       ret = name.substring((name.indexOf('&quot;') + 1), name.lastIndexOf('&quot;'));</span>
+<span class="lineNum">     209 </span>            :       // Setters have an '=' on the end, remove it
+<span class="lineNum">     210 </span>            :       if (isSetter) {
+<span class="lineNum">     211 </span><span class="lineCov">          3 :         ret = ret.replaceFirst(&quot;=&quot;, &quot;&quot;, ret.length - 1);</span>
+<span class="lineNum">     212 </span>            :       }
+<span class="lineNum">     213 </span>            :     } else {
+<span class="lineNum">     214 </span><span class="lineCov">          1 :       ret = value.toString();</span>
+<span class="lineNum">     215 </span>            :     }
+<span class="lineNum">     216 </span><span class="lineCov">          2 :     _log(&quot;_symbolToString:: Method name is: ${ret}&quot;);</span>
+<span class="lineNum">     217 </span>            :     return ret;
+<span class="lineNum">     218 </span>            :   }
 <span class="lineNum">     219 </span>            : 
-<span class="lineNum">     220 </span><span class="lineCov">          2 :   E elementAt(int index) =&gt; this.toIterable().elementAt(index);</span>
-<span class="lineNum">     221 </span>            : 
-<span class="lineNum">     222 </span><span class="lineCov">          2 :   bool every(bool f(dynamic element)) =&gt; this.toIterable().every(f);</span>
+<span class="lineNum">     220 </span>            :   ///
+<span class="lineNum">     221 </span>            :   /// Iterable implementation methods and properties
+<span class="lineNum">     222 </span>            :   ///
 <span class="lineNum">     223 </span>            : 
-<span class="lineNum">     224 </span>            :   Iterable&lt;T&gt; expand&lt;T&gt;(dynamic f(dynamic element)) =&gt;
-<span class="lineNum">     225 </span><span class="lineCov">          2 :       this.toIterable().expand(f);</span>
-<span class="lineNum">     226 </span>            : 
-<span class="lineNum">     227 </span>            :   dynamic firstWhere(bool test(dynamic value), {dynamic orElse}) =&gt;
-<span class="lineNum">     228 </span><span class="lineCov">          2 :       this.toIterable().firstWhere(test, orElse: orElse);</span>
+<span class="lineNum">     224 </span><span class="lineCov">          2 :   bool any(bool f(dynamic element)) =&gt; this.toIterable().any(f);</span>
+<span class="lineNum">     225 </span>            : 
+<span class="lineNum">     226 </span><span class="lineCov">          2 :   bool contains(dynamic element) =&gt; this.toIterable().contains(element);</span>
+<span class="lineNum">     227 </span>            : 
+<span class="lineNum">     228 </span><span class="lineCov">          2 :   E elementAt(int index) =&gt; this.toIterable().elementAt(index);</span>
 <span class="lineNum">     229 </span>            : 
-<span class="lineNum">     230 </span>            :   T fold&lt;T&gt;(T initialValue, T combine(T a, dynamic b)) =&gt;
-<span class="lineNum">     231 </span><span class="lineCov">          2 :       this.toIterable().fold(initialValue, combine);</span>
-<span class="lineNum">     232 </span>            : 
-<span class="lineNum">     233 </span><span class="lineCov">          2 :   String join([String separator = &quot;&quot;]) =&gt; this.toIterable().join(separator);</span>
+<span class="lineNum">     230 </span><span class="lineCov">          2 :   bool every(bool f(dynamic element)) =&gt; this.toIterable().every(f);</span>
+<span class="lineNum">     231 </span>            : 
+<span class="lineNum">     232 </span>            :   Iterable&lt;T&gt; expand&lt;T&gt;(dynamic f(dynamic element)) =&gt;
+<span class="lineNum">     233 </span><span class="lineCov">          2 :       this.toIterable().expand(f);</span>
 <span class="lineNum">     234 </span>            : 
-<span class="lineNum">     235 </span>            :   dynamic lastWhere(bool test(dynamic value), {dynamic orElse}) =&gt;
+<span class="lineNum">     235 </span>            :   dynamic firstWhere(bool test(dynamic value), {dynamic orElse}) =&gt;
 <span class="lineNum">     236 </span><span class="lineCov">          2 :       this.toIterable().firstWhere(test, orElse: orElse);</span>
 <span class="lineNum">     237 </span>            : 
-<span class="lineNum">     238 </span><span class="lineCov">          2 :   Iterable&lt;T&gt; map&lt;T&gt;(dynamic f(dynamic element)) =&gt; this.toIterable().map(f);</span>
-<span class="lineNum">     239 </span>            : 
-<span class="lineNum">     240 </span>            :   dynamic reduce(dynamic combine(dynamic value, dynamic element)) =&gt;
-<span class="lineNum">     241 </span><span class="lineCov">          2 :       this.toIterable().reduce(combine);</span>
+<span class="lineNum">     238 </span>            :   T fold&lt;T&gt;(T initialValue, T combine(T a, dynamic b)) =&gt;
+<span class="lineNum">     239 </span><span class="lineCov">          2 :       this.toIterable().fold(initialValue, combine);</span>
+<span class="lineNum">     240 </span>            : 
+<span class="lineNum">     241 </span><span class="lineCov">          2 :   String join([String separator = &quot;&quot;]) =&gt; this.toIterable().join(separator);</span>
 <span class="lineNum">     242 </span>            : 
-<span class="lineNum">     243 </span>            :   dynamic singleWhere(bool test(dynamic value), {dynamic orElse}) =&gt;
+<span class="lineNum">     243 </span>            :   dynamic lastWhere(bool test(dynamic value), {dynamic orElse}) =&gt;
 <span class="lineNum">     244 </span><span class="lineCov">          2 :       this.toIterable().firstWhere(test, orElse: orElse);</span>
 <span class="lineNum">     245 </span>            : 
-<span class="lineNum">     246 </span><span class="lineCov">          2 :   Iterable&lt;E&gt; skip(int n) =&gt; this.toIterable().skip(n);</span>
+<span class="lineNum">     246 </span><span class="lineCov">          2 :   Iterable&lt;T&gt; map&lt;T&gt;(dynamic f(dynamic element)) =&gt; this.toIterable().map(f);</span>
 <span class="lineNum">     247 </span>            : 
-<span class="lineNum">     248 </span>            :   Iterable&lt;E&gt; skipWhile(bool test(dynamic value)) =&gt;
-<span class="lineNum">     249 </span><span class="lineCov">          2 :       this.toIterable().skipWhile(test);</span>
+<span class="lineNum">     248 </span>            :   dynamic reduce(dynamic combine(dynamic value, dynamic element)) =&gt;
+<span class="lineNum">     249 </span><span class="lineCov">          2 :       this.toIterable().reduce(combine);</span>
 <span class="lineNum">     250 </span>            : 
-<span class="lineNum">     251 </span><span class="lineCov">          2 :   Iterable&lt;E&gt; take(int n) =&gt; this.toIterable().take(n);</span>
-<span class="lineNum">     252 </span>            : 
-<span class="lineNum">     253 </span>            :   Iterable&lt;E&gt; takeWhile(bool test(dynamic value)) =&gt;
-<span class="lineNum">     254 </span><span class="lineCov">          2 :       this.toIterable().takeWhile(test);</span>
+<span class="lineNum">     251 </span>            :   dynamic singleWhere(bool test(dynamic value), {dynamic orElse}) =&gt;
+<span class="lineNum">     252 </span><span class="lineCov">          2 :       this.toIterable().firstWhere(test, orElse: orElse);</span>
+<span class="lineNum">     253 </span>            : 
+<span class="lineNum">     254 </span><span class="lineCov">          2 :   Iterable&lt;E&gt; skip(int n) =&gt; this.toIterable().skip(n);</span>
 <span class="lineNum">     255 </span>            : 
-<span class="lineNum">     256 </span>            :   List&lt;dynamic&gt; toList({bool growable: true}) =&gt;
-<span class="lineNum">     257 </span><span class="lineCov">          2 :       this.toIterable().toList(growable: growable);</span>
+<span class="lineNum">     256 </span>            :   Iterable&lt;E&gt; skipWhile(bool test(dynamic value)) =&gt;
+<span class="lineNum">     257 </span><span class="lineCov">          2 :       this.toIterable().skipWhile(test);</span>
 <span class="lineNum">     258 </span>            : 
-<span class="lineNum">     259 </span><span class="lineCov">          2 :   Set&lt;dynamic&gt; toSet() =&gt; this.toIterable().toSet();</span>
+<span class="lineNum">     259 </span><span class="lineCov">          2 :   Iterable&lt;E&gt; take(int n) =&gt; this.toIterable().take(n);</span>
 <span class="lineNum">     260 </span>            : 
-<span class="lineNum">     261 </span><span class="lineCov">          2 :   Iterable&lt;E&gt; where(bool f(dynamic element)) =&gt; this.toIterable().where(f);</span>
-<span class="lineNum">     262 </span>            : 
-<span class="lineNum">     263 </span><span class="lineCov">          2 :   E get first =&gt; this.toIterable().first;</span>
-<span class="lineNum">     264 </span>            : 
-<span class="lineNum">     265 </span><span class="lineCov">          2 :   Iterator&lt;E&gt; get iterator =&gt; this.toIterable().iterator;</span>
+<span class="lineNum">     261 </span>            :   Iterable&lt;E&gt; takeWhile(bool test(dynamic value)) =&gt;
+<span class="lineNum">     262 </span><span class="lineCov">          2 :       this.toIterable().takeWhile(test);</span>
+<span class="lineNum">     263 </span>            : 
+<span class="lineNum">     264 </span>            :   List&lt;dynamic&gt; toList({bool growable: true}) =&gt;
+<span class="lineNum">     265 </span><span class="lineCov">          2 :       this.toIterable().toList(growable: growable);</span>
 <span class="lineNum">     266 </span>            : 
-<span class="lineNum">     267 </span><span class="lineCov">          2 :   E get last =&gt; this.toIterable().last;</span>
+<span class="lineNum">     267 </span><span class="lineCov">          2 :   Set&lt;dynamic&gt; toSet() =&gt; this.toIterable().toSet();</span>
 <span class="lineNum">     268 </span>            : 
-<span class="lineNum">     269 </span><span class="lineCov">          2 :   E get single =&gt; this.toIterable().single;</span>
+<span class="lineNum">     269 </span><span class="lineCov">          2 :   Iterable&lt;E&gt; where(bool f(dynamic element)) =&gt; this.toIterable().where(f);</span>
 <span class="lineNum">     270 </span>            : 
-<span class="lineNum">     271 </span>            :   ///
-<span class="lineNum">     272 </span>            :   /// Map implementation methods and properties *
-<span class="lineNum">     273 </span>            :   ///
+<span class="lineNum">     271 </span><span class="lineCov">          2 :   E get first =&gt; this.toIterable().first;</span>
+<span class="lineNum">     272 </span>            : 
+<span class="lineNum">     273 </span><span class="lineCov">          2 :   Iterator&lt;E&gt; get iterator =&gt; this.toIterable().iterator;</span>
 <span class="lineNum">     274 </span>            : 
-<span class="lineNum">     275 </span>            :   // Pass through to the inner _objectData map.
-<span class="lineNum">     276 </span><span class="lineCov">          2 :   bool containsValue(dynamic value) =&gt; _objectData.containsValue(value);</span>
-<span class="lineNum">     277 </span>            : 
-<span class="lineNum">     278 </span>            :   // Pass through to the inner _objectData map.
-<span class="lineNum">     279 </span>            :   bool containsKey(dynamic value) {
-<span class="lineNum">     280 </span><span class="lineCov">          3 :     return _objectData.containsKey(_symbolToString(value));</span>
-<span class="lineNum">     281 </span>            :   }
+<span class="lineNum">     275 </span><span class="lineCov">          2 :   E get last =&gt; this.toIterable().last;</span>
+<span class="lineNum">     276 </span>            : 
+<span class="lineNum">     277 </span><span class="lineCov">          2 :   E get single =&gt; this.toIterable().single;</span>
+<span class="lineNum">     278 </span>            : 
+<span class="lineNum">     279 </span>            :   ///
+<span class="lineNum">     280 </span>            :   /// Map implementation methods and properties *
+<span class="lineNum">     281 </span>            :   ///
 <span class="lineNum">     282 </span>            : 
-<span class="lineNum">     283 </span>            :   // Pass through to the innter _objectData map.
-<span class="lineNum">     284 </span><span class="lineCov">          2 :   bool get isNotEmpty =&gt; _objectData.isNotEmpty;</span>
+<span class="lineNum">     283 </span>            :   // Pass through to the inner _objectData map.
+<span class="lineNum">     284 </span><span class="lineCov">          2 :   bool containsValue(dynamic value) =&gt; _objectData.containsValue(value);</span>
 <span class="lineNum">     285 </span>            : 
 <span class="lineNum">     286 </span>            :   // Pass through to the inner _objectData map.
-<span class="lineNum">     287 </span><span class="lineCov">          2 :   dynamic operator [](dynamic key) =&gt; _objectData[key];</span>
-<span class="lineNum">     288 </span>            : 
-<span class="lineNum">     289 </span>            :   // Pass through to the inner _objectData map.
-<span class="lineNum">     290 </span>            :   void forEach(void func(dynamic key, dynamic value)) =&gt;
-<span class="lineNum">     291 </span><span class="lineCov">          2 :       _objectData.forEach(func);</span>
-<span class="lineNum">     292 </span>            : 
-<span class="lineNum">     293 </span>            :   // Pass through to the inner _objectData map.
-<span class="lineNum">     294 </span><span class="lineCov">          2 :   Iterable get keys =&gt; _objectData.keys;</span>
-<span class="lineNum">     295 </span>            : 
-<span class="lineNum">     296 </span>            :   // Pass through to the inner _objectData map.
-<span class="lineNum">     297 </span><span class="lineCov">          2 :   Iterable get values =&gt; _objectData.values;</span>
-<span class="lineNum">     298 </span>            : 
-<span class="lineNum">     299 </span>            :   // Pass through to the inner _objectData map.
-<span class="lineNum">     300 </span><span class="lineCov">          2 :   int get length =&gt; _objectData.length;</span>
-<span class="lineNum">     301 </span>            : 
-<span class="lineNum">     302 </span>            :   // Pass through to the inner _objectData map.
-<span class="lineNum">     303 </span><span class="lineCov">          2 :   bool get isEmpty =&gt; _objectData.isEmpty;</span>
-<span class="lineNum">     304 </span>            : 
-<span class="lineNum">     305 </span>            :   // Pass through to the inner _objectData map.
-<span class="lineNum">     306 </span><span class="lineCov">          2 :   void addAll(dynamic items) =&gt; _objectData.addAll(items);</span>
-<span class="lineNum">     307 </span>            : 
-<span class="lineNum">     308 </span>            :   /// Specific implementations which check isImmtable to determine if an
-<span class="lineNum">     309 </span>            :   /// unknown key should be allowed.
-<span class="lineNum">     310 </span>            :   ///
-<span class="lineNum">     311 </span>            :   /// If [isImmutable] is false, or the key already exists,
-<span class="lineNum">     312 </span>            :   /// then allow the edit.
-<span class="lineNum">     313 </span>            :   /// Throw [JsonObjectLiteException] if we're not allowed to add a new
-<span class="lineNum">     314 </span>            :   /// key
-<span class="lineNum">     315 </span>            :   void operator []=(dynamic key, dynamic value) {
-<span class="lineNum">     316 </span>            :     // If the map is not immutable, or it already contains the key, then
-<span class="lineNum">     317 </span><span class="lineCov">          3 :     if (this.isImmutable == false || this.containsKey(key)) {</span>
-<span class="lineNum">     318 </span>            :       //allow the edit, as we don't care if it's a new key or not
-<span class="lineNum">     319 </span><span class="lineCov">          2 :       return _objectData[key] = value;</span>
-<span class="lineNum">     320 </span>            :     } else {
-<span class="lineNum">     321 </span><span class="lineCov">          1 :       throw new JsonObjectLiteException(&quot;JsonObject is not extendable&quot;);</span>
-<span class="lineNum">     322 </span>            :     }
-<span class="lineNum">     323 </span>            :   }
-<span class="lineNum">     324 </span>            : 
-<span class="lineNum">     325 </span>            :   /// If [isImmutable] is false, or the key already exists,
-<span class="lineNum">     326 </span>            :   /// then allow the edit.
-<span class="lineNum">     327 </span>            :   /// Throw [JsonObjectLiteException] if we're not allowed to add a new
-<span class="lineNum">     328 </span>            :   /// key
-<span class="lineNum">     329 </span>            :   void putIfAbsent(dynamic key, ifAbsent()) {
-<span class="lineNum">     330 </span><span class="lineCov">          3 :     if (this.isImmutable == false || this.containsKey(key)) {</span>
-<span class="lineNum">     331 </span><span class="lineCov">          2 :       return _objectData.putIfAbsent(key, ifAbsent);</span>
-<span class="lineNum">     332 </span>            :     } else {
-<span class="lineNum">     333 </span><span class="lineCov">          1 :       throw new JsonObjectLiteException(&quot;JsonObject is not extendable&quot;);</span>
-<span class="lineNum">     334 </span>            :     }
-<span class="lineNum">     335 </span>            :   }
-<span class="lineNum">     336 </span>            : 
-<span class="lineNum">     337 </span>            :   /// If [isImmutable] is false, or the key already exists,
-<span class="lineNum">     338 </span>            :   /// then allow the removal.
-<span class="lineNum">     339 </span>            :   /// Throw [JsonObjectLiteException] if we're not allowed to remove a
-<span class="lineNum">     340 </span>            :   /// key
-<span class="lineNum">     341 </span>            :   dynamic remove(dynamic key) {
-<span class="lineNum">     342 </span><span class="lineCov">          3 :     if (this.isImmutable == false || this.containsKey(key)) {</span>
-<span class="lineNum">     343 </span><span class="lineCov">          2 :       return _objectData.remove(key);</span>
-<span class="lineNum">     344 </span>            :     } else {
-<span class="lineNum">     345 </span><span class="lineCov">          1 :       throw new JsonObjectLiteException(&quot;JsonObject is not extendable&quot;);</span>
-<span class="lineNum">     346 </span>            :     }
-<span class="lineNum">     347 </span>            :   }
-<span class="lineNum">     348 </span>            : 
-<span class="lineNum">     349 </span>            :   /// If [isImmutable] is false, then allow the map to be cleared
-<span class="lineNum">     350 </span>            :   /// Throw [JsonObjectLiteException] if we're not allowed to clear.
-<span class="lineNum">     351 </span>            :   void clear() {
-<span class="lineNum">     352 </span><span class="lineCov">          2 :     if (this.isImmutable == false) {</span>
-<span class="lineNum">     353 </span><span class="lineCov">          2 :       _objectData.clear();</span>
-<span class="lineNum">     354 </span>            :     } else {
-<span class="lineNum">     355 </span><span class="lineCov">          1 :       throw new JsonObjectLiteException(&quot;JsonObject is not extendable&quot;);</span>
-<span class="lineNum">     356 </span>            :     }
-<span class="lineNum">     357 </span>            :   }
-<span class="lineNum">     358 </span>            : }
-<span class="lineNum">     359 </span>            : 
-<span class="lineNum">     360 </span>            : /// Exception class thrown by JsonObjectLite
-<span class="lineNum">     361 </span>            : class JsonObjectLiteException implements Exception {
-<span class="lineNum">     362 </span><span class="lineCov">          1 :   const JsonObjectLiteException([String message]) : this._message = message;</span>
-<span class="lineNum">     363 </span><span class="lineCov">          1 :   String toString() =&gt; (this._message != null</span>
-<span class="lineNum">     364 </span><span class="lineCov">          1 :       ? &quot;JsonObjectException: $_message&quot;</span>
-<span class="lineNum">     365 </span><span class="lineCov">          1 :       : &quot;JsonObjectException&quot;);</span>
-<span class="lineNum">     366 </span>            :   final String _message;
-<span class="lineNum">     367 </span>            : }
+<span class="lineNum">     287 </span>            :   bool containsKey(dynamic value) {
+<span class="lineNum">     288 </span><span class="lineCov">          3 :     return _objectData.containsKey(_symbolToString(value));</span>
+<span class="lineNum">     289 </span>            :   }
+<span class="lineNum">     290 </span>            : 
+<span class="lineNum">     291 </span>            :   // Pass through to the innter _objectData map.
+<span class="lineNum">     292 </span><span class="lineCov">          2 :   bool get isNotEmpty =&gt; _objectData.isNotEmpty;</span>
+<span class="lineNum">     293 </span>            : 
+<span class="lineNum">     294 </span>            :   // Pass through to the inner _objectData map.
+<span class="lineNum">     295 </span><span class="lineCov">          2 :   dynamic operator [](dynamic key) =&gt; _objectData[key];</span>
+<span class="lineNum">     296 </span>            : 
+<span class="lineNum">     297 </span>            :   // Pass through to the inner _objectData map.
+<span class="lineNum">     298 </span>            :   void forEach(void func(dynamic key, dynamic value)) =&gt;
+<span class="lineNum">     299 </span><span class="lineCov">          2 :       _objectData.forEach(func);</span>
+<span class="lineNum">     300 </span>            : 
+<span class="lineNum">     301 </span>            :   // Pass through to the inner _objectData map.
+<span class="lineNum">     302 </span><span class="lineCov">          2 :   Iterable get keys =&gt; _objectData.keys;</span>
+<span class="lineNum">     303 </span>            : 
+<span class="lineNum">     304 </span>            :   // Pass through to the inner _objectData map.
+<span class="lineNum">     305 </span><span class="lineCov">          2 :   Iterable get values =&gt; _objectData.values;</span>
+<span class="lineNum">     306 </span>            : 
+<span class="lineNum">     307 </span>            :   // Pass through to the inner _objectData map.
+<span class="lineNum">     308 </span><span class="lineCov">          2 :   int get length =&gt; _objectData.length;</span>
+<span class="lineNum">     309 </span>            : 
+<span class="lineNum">     310 </span>            :   // Pass through to the inner _objectData map.
+<span class="lineNum">     311 </span><span class="lineCov">          2 :   bool get isEmpty =&gt; _objectData.isEmpty;</span>
+<span class="lineNum">     312 </span>            : 
+<span class="lineNum">     313 </span>            :   // Pass through to the inner _objectData map.
+<span class="lineNum">     314 </span><span class="lineCov">          2 :   void addAll(dynamic items) =&gt; _objectData.addAll(items);</span>
+<span class="lineNum">     315 </span>            : 
+<span class="lineNum">     316 </span>            :   /// Specific implementations which check isImmtable to determine if an
+<span class="lineNum">     317 </span>            :   /// unknown key should be allowed.
+<span class="lineNum">     318 </span>            :   ///
+<span class="lineNum">     319 </span>            :   /// If [isImmutable] is false, or the key already exists,
+<span class="lineNum">     320 </span>            :   /// then allow the edit.
+<span class="lineNum">     321 </span>            :   /// Throw [JsonObjectLiteException] if we're not allowed to add a new
+<span class="lineNum">     322 </span>            :   /// key
+<span class="lineNum">     323 </span>            :   void operator []=(dynamic key, dynamic value) {
+<span class="lineNum">     324 </span>            :     // If the map is not immutable, or it already contains the key, then
+<span class="lineNum">     325 </span><span class="lineCov">          3 :     if (this.isImmutable == false || this.containsKey(key)) {</span>
+<span class="lineNum">     326 </span>            :       //allow the edit, as we don't care if it's a new key or not
+<span class="lineNum">     327 </span><span class="lineCov">          2 :       return _objectData[key] = value;</span>
+<span class="lineNum">     328 </span>            :     } else {
+<span class="lineNum">     329 </span><span class="lineCov">          1 :       throw new JsonObjectLiteException(&quot;JsonObject is not extendable&quot;);</span>
+<span class="lineNum">     330 </span>            :     }
+<span class="lineNum">     331 </span>            :   }
+<span class="lineNum">     332 </span>            : 
+<span class="lineNum">     333 </span>            :   /// If [isImmutable] is false, or the key already exists,
+<span class="lineNum">     334 </span>            :   /// then allow the edit.
+<span class="lineNum">     335 </span>            :   /// Throw [JsonObjectLiteException] if we're not allowed to add a new
+<span class="lineNum">     336 </span>            :   /// key
+<span class="lineNum">     337 </span>            :   void putIfAbsent(dynamic key, ifAbsent()) {
+<span class="lineNum">     338 </span><span class="lineCov">          3 :     if (this.isImmutable == false || this.containsKey(key)) {</span>
+<span class="lineNum">     339 </span><span class="lineCov">          2 :       return _objectData.putIfAbsent(key, ifAbsent);</span>
+<span class="lineNum">     340 </span>            :     } else {
+<span class="lineNum">     341 </span><span class="lineCov">          1 :       throw new JsonObjectLiteException(&quot;JsonObject is not extendable&quot;);</span>
+<span class="lineNum">     342 </span>            :     }
+<span class="lineNum">     343 </span>            :   }
+<span class="lineNum">     344 </span>            : 
+<span class="lineNum">     345 </span>            :   /// If [isImmutable] is false, or the key already exists,
+<span class="lineNum">     346 </span>            :   /// then allow the removal.
+<span class="lineNum">     347 </span>            :   /// Throw [JsonObjectLiteException] if we're not allowed to remove a
+<span class="lineNum">     348 </span>            :   /// key
+<span class="lineNum">     349 </span>            :   dynamic remove(dynamic key) {
+<span class="lineNum">     350 </span><span class="lineCov">          3 :     if (this.isImmutable == false || this.containsKey(key)) {</span>
+<span class="lineNum">     351 </span><span class="lineCov">          2 :       return _objectData.remove(key);</span>
+<span class="lineNum">     352 </span>            :     } else {
+<span class="lineNum">     353 </span><span class="lineCov">          1 :       throw new JsonObjectLiteException(&quot;JsonObject is not extendable&quot;);</span>
+<span class="lineNum">     354 </span>            :     }
+<span class="lineNum">     355 </span>            :   }
+<span class="lineNum">     356 </span>            : 
+<span class="lineNum">     357 </span>            :   /// If [isImmutable] is false, then allow the map to be cleared
+<span class="lineNum">     358 </span>            :   /// Throw [JsonObjectLiteException] if we're not allowed to clear.
+<span class="lineNum">     359 </span>            :   void clear() {
+<span class="lineNum">     360 </span><span class="lineCov">          2 :     if (this.isImmutable == false) {</span>
+<span class="lineNum">     361 </span><span class="lineCov">          2 :       _objectData.clear();</span>
+<span class="lineNum">     362 </span>            :     } else {
+<span class="lineNum">     363 </span><span class="lineCov">          1 :       throw new JsonObjectLiteException(&quot;JsonObject is not extendable&quot;);</span>
+<span class="lineNum">     364 </span>            :     }
+<span class="lineNum">     365 </span>            :   }
+<span class="lineNum">     366 </span>            : }
+<span class="lineNum">     367 </span>            : 
+<span class="lineNum">     368 </span>            : /// Exception class thrown by JsonObjectLite
+<span class="lineNum">     369 </span>            : class JsonObjectLiteException implements Exception {
+<span class="lineNum">     370 </span><span class="lineCov">          1 :   const JsonObjectLiteException([String message]) : this._message = message;</span>
+<span class="lineNum">     371 </span><span class="lineCov">          1 :   String toString() =&gt; (this._message != null</span>
+<span class="lineNum">     372 </span><span class="lineCov">          1 :       ? &quot;JsonObjectException: $_message&quot;</span>
+<span class="lineNum">     373 </span><span class="lineCov">          1 :       : &quot;JsonObjectException&quot;);</span>
+<span class="lineNum">     374 </span>            :   final String _message;
+<span class="lineNum">     375 </span>            : }
 </pre>
       </td>
     </tr>
