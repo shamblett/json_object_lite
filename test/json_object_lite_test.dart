@@ -429,7 +429,7 @@ void main() {
     });
   });
 
-  group("Utility", () {
+  group("Misc", () {
     test("Exceptions", () {
       final o = new JsonObjectLite();
       o.isImmutable = true;
@@ -473,6 +473,19 @@ void main() {
         thrown = true;
       }
       expect(thrown, true);
+    });
+
+    test("Special characters", () {
+      final JsonObjectLite o = new JsonObjectLite.fromMap(
+          {"_rev": "100678", "@rev2": "300400", "+": "200700"});
+      expect(o._rev, "100678");
+      expect(o["@rev2"], "300400");
+      expect(o["+"], "200700");
+      final JsonObjectLite p = new JsonObjectLite.fromJsonString(
+          '{"_rev": "100678", "@rev2": "300400", "+": "200700"}');
+      expect(p._rev, "100678");
+      expect(p["@rev2"], "300400");
+      expect(p["+"], "200700");
     });
 
     test("Debug", () {
