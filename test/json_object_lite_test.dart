@@ -106,13 +106,13 @@ void main() {
 
     test("From JSON string - list", () {
       final String jsonString =
-          '[1, 2, 3, 4, 5, "one", "two", "three", "four", "five"]';
+          '[1, 2, 3, 4, 5, "one", "two", "three", "four", "five", [6, 7, [8, 9]]]';
 
       final JsonObjectLite o = new JsonObjectLite.fromJsonString(jsonString);
       expect(o.isImmutable, false);
       final List theList = o.toList();
-      expect(
-          theList.toString(), '[1, 2, 3, 4, 5, one, two, three, four, five]');
+      expect(theList.toString(),
+          '[1, 2, 3, 4, 5, one, two, three, four, five, [6, 7, [8, 9]]]');
     });
 
     test("From Map", () {
@@ -351,7 +351,8 @@ void main() {
       expect(folder.fold(0, (prev, element) => prev + element), 6);
       expect(folder.reduce((value, element) => value + element), 6);
       expect(folder.join("-"), "1-2-3");
-      expect(o.map, new isInstanceOf<MappedIterable<dynamic, dynamic>>());
+      final Iterable<dynamic> it = o.map((dynamic element) {});
+      expect(it.isNotEmpty, isTrue);
       expect(folder
           .skip(2)
           .length, 1);
@@ -384,7 +385,7 @@ void main() {
       } catch (ex) {
         expect(ex.toString(), 'Bad state: No element');
       }
-      expect(o.iterator, new isInstanceOf<_CompactIterator>());
+      expect(o.iterator.toString(), 'Instance of \'_CompactIterator\'');
     });
 
     test("Map", () {
