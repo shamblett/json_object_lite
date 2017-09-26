@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.lcov</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">100</td>
             <td class="headerCovTableEntry">102</td>
-            <td class="headerCovTableEntryHi">98.0 %</td>
+            <td class="headerCovTableEntry">102</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2017-09-25</td>
+            <td class="headerValue">2017-09-26</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -244,7 +244,7 @@
 <span class="lineNum">     182 </span><span class="lineCov">          1 :         final listItem = data[i];</span>
 <span class="lineNum">     183 </span><span class="lineCov">          1 :         if (listItem is List) {</span>
 <span class="lineNum">     184 </span>            :           // Recurse
-<span class="lineNum">     185 </span><span class="lineNoCov">          0 :           _extractElements(listItem);</span>
+<span class="lineNum">     185 </span><span class="lineCov">          1 :           _extractElements(listItem);</span>
 <span class="lineNum">     186 </span><span class="lineCov">          1 :         } else if (listItem is Map) {</span>
 <span class="lineNum">     187 </span>            :           // Replace the existing Map with a JsonObject
 <span class="lineNum">     188 </span><span class="lineCov">          2 :           data[i] = new JsonObjectLite.fromMap(listItem);</span>
@@ -297,7 +297,7 @@
 <span class="lineNum">     235 </span>            :   dynamic lastWhere(bool test(dynamic value), {dynamic orElse}) =&gt;
 <span class="lineNum">     236 </span><span class="lineCov">          2 :       this.toIterable().firstWhere(test, orElse: orElse);</span>
 <span class="lineNum">     237 </span>            : 
-<span class="lineNum">     238 </span><span class="lineNoCov">          0 :   Iterable&lt;T&gt; map&lt;T&gt;(dynamic f(dynamic element)) =&gt; this.toIterable().map(f);</span>
+<span class="lineNum">     238 </span><span class="lineCov">          2 :   Iterable&lt;T&gt; map&lt;T&gt;(dynamic f(dynamic element)) =&gt; this.toIterable().map(f);</span>
 <span class="lineNum">     239 </span>            : 
 <span class="lineNum">     240 </span>            :   dynamic reduce(dynamic combine(dynamic value, dynamic element)) =&gt;
 <span class="lineNum">     241 </span><span class="lineCov">          2 :       this.toIterable().reduce(combine);</span>
