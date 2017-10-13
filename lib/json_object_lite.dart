@@ -21,14 +21,15 @@ void _log(String obj) {
 }
 
 /// JsonObjectLite allows .property name access to JSON by using
-/// noSuchMethod.
+/// noSuchMethod. The object is set to not immutable so properties can be
+/// added.
 @proxy
 class JsonObjectLite<E> extends Object implements Map, Iterable {
   /// Default constructor.
   /// Creates a new empty map.
   JsonObjectLite() {
     _objectData = new Map();
-    isImmutable = true;
+    isImmutable = false;
   }
 
   /// Eager constructor parses [jsonString] using [JsonDecoder].
@@ -37,6 +38,7 @@ class JsonObjectLite<E> extends Object implements Map, Iterable {
   ///
   /// If [recursive] is true, replaces all maps recursively with JsonObjects.
   /// The default value is [true].
+  /// The object is set to immutable, the user must reset this to add more properties.
   factory JsonObjectLite.fromJsonString(String jsonString,
       [JsonObjectLite t, bool recursive = true]) {
     if (t == null) {
@@ -46,7 +48,7 @@ class JsonObjectLite<E> extends Object implements Map, Iterable {
     if (recursive) {
       t._extractElements(t._objectData);
     }
-    t.isImmutable = false;
+    t.isImmutable = true;
     return t;
   }
 
@@ -55,19 +57,22 @@ class JsonObjectLite<E> extends Object implements Map, Iterable {
   ///
   /// If [recursive] is true, all values of the map will be converted
   /// to [JsonObjectLite]s as well. The default value is [true].
+  /// The object is set to immutable, the user must reset this to add more properties.
   JsonObjectLite.fromMap(Map map, [bool recursive = true]) {
     _objectData = map;
     if (recursive) {
       _extractElements(_objectData);
     }
-    isImmutable = false;
+    isImmutable = true;
   }
 
   /// Typed JsonObjectLite
   static JsonObjectLite toTypedJsonObjectLite(
       JsonObjectLite src, JsonObjectLite dest) {
     dest._objectData = src._objectData;
-    dest.isImmutable = true;
+    if (src.isImmutable) {
+      dest.isImmutable = true;
+    }
     return dest;
   }
 
@@ -87,10 +92,10 @@ class JsonObjectLite<E> extends Object implements Map, Iterable {
   /// If set to false, then calling o.blah="123" will create a new blah property
   /// if it didn't already exist.
   ///
-  /// Set to false by default when a JsonObjectLite is created with [JsonObjectLite.fromJsonString()]
+  /// Set to true by default when a JsonObjectLite is created with [JsonObjectLite.fromJsonString()]
   /// or [JsonObjectLite.fromMap()].
   /// The default constructor [JsonObjectLite()], sets this value to
-  /// true.
+  /// false so properties can be added.
   set isImmutable(bool state) => isExtendable = !state;
 
   bool get isImmutable => !isExtendable;

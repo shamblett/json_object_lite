@@ -1,3 +1,6 @@
+**1.1.0**<br><br>
+Fix immutability to follow that of json_object, not reverse it
+
 **1.0.2**<br><br>
 Fix failing test in Chrome
 

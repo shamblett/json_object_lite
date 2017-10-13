@@ -39,7 +39,7 @@ void main() {
   group("Construction", () {
     test("Default constructor", () {
       final JsonObjectLite jsonObject = new JsonObjectLite();
-      expect(jsonObject.isImmutable, true);
+      expect(jsonObject.isImmutable, false);
     });
 
     test("From JSON string - Map", () {
@@ -77,7 +77,7 @@ void main() {
       """;
 
       final JsonObjectLite o = new JsonObjectLite.fromJsonString(jsonString);
-      expect(o.isImmutable, false);
+      expect(o.isImmutable, true);
 
       // Basic access
       expect("Chris", equals(o.name));
@@ -100,6 +100,7 @@ void main() {
       expect("page2", equals(o.books[0].chapters[0].pages[1]));
 
       // Try an update
+      o.handles.googlePlus.isImmutable = false;
       o.handles.googlePlus.name = "+ChrisB";
       expect("+ChrisB", equals(o.handles.googlePlus.name));
     });
@@ -109,7 +110,7 @@ void main() {
           '[1, 2, 3, 4, 5, "one", "two", "three", "four", "five", [6, 7, [8, 9]]]';
 
       final JsonObjectLite o = new JsonObjectLite.fromJsonString(jsonString);
-      expect(o.isImmutable, false);
+      expect(o.isImmutable, true);
       final List theList = o.toList();
       expect(theList.toString(),
           '[1, 2, 3, 4, 5, one, two, three, four, five, [6, 7, [8, 9]]]');
@@ -142,7 +143,7 @@ void main() {
       };
 
       final JsonObjectLite o = new JsonObjectLite.fromMap(jsonMap);
-      expect(o.isImmutable, false);
+      expect(o.isImmutable, true);
 
       // Basic access
       expect("Chris", equals(o.name));
@@ -165,6 +166,7 @@ void main() {
       expect("page2", equals(o.books[0].chapters[0].pages[1]));
 
       // Try an update
+      o.handles.googlePlus.isImmutable = false;
       o.handles.googlePlus.name = "+ChrisB";
       expect("+ChrisB", equals(o.handles.googlePlus.name));
     });
@@ -174,7 +176,7 @@ void main() {
     test("Typed Object", () {
       final JsonObjectLite o = new JsonObjectLite.fromMap(
           {"Name": "Fred", "Sex": "male", "Age": 40});
-      expect(o.isImmutable, false);
+      expect(o.isImmutable, true);
       final JsonObjectLite dest =
       JsonObjectLite.toTypedJsonObjectLite(o, new JsonObjectLite());
       expect(dest.Name, "Fred");
@@ -185,7 +187,7 @@ void main() {
 
     test("Strong typing new", () {
       final Person person = new Person();
-      expect(person.isImmutable, true);
+      expect(person.isImmutable, false);
       bool thrown = false;
       try {
         expect(throwsNoSuchMethodError, person.name);
@@ -197,7 +199,7 @@ void main() {
 
     test("Strong typing new extendable", () {
       final Person person = new Person();
-      expect(person.isImmutable, true);
+      expect(person.isImmutable, false);
       person.isImmutable = false;
       person.name = "Steve";
       expect(person.name, "Steve");
@@ -223,8 +225,9 @@ void main() {
       }
       """;
       final Person person = new Person.fromString(jsonString);
-      expect(person.isImmutable, false);
+      expect(person.isImmutable, true);
       expect(person.addresses[0].address.line1, equals("1 the street"));
+      person.isImmutable = false;
       person.name = "Steve";
       expect(person.name, "Steve");
     });
@@ -491,7 +494,7 @@ void main() {
     test("Debug", () {
       enableJsonObjectLiteDebugMessages = true;
       final o = new JsonObjectLite();
-      o.isImmutable = true;
+      o.isImmutable = false;
       o.name = "fred";
       bool thrown = false;
       try {
