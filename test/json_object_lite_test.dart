@@ -385,7 +385,7 @@ void main() {
       } catch (ex) {
         expect(ex.toString(), 'Bad state: No element');
       }
-      expect(o.iterator.toString(), 'Instance of \'_CompactIterator\'');
+      expect(o.iterator.toString().contains("Iterator"), true);
     });
 
     test("Map", () {

@@ -1,6 +1,6 @@
 name: json_object_lite
 description: Allow use of JSON Maps in dot notation format without using mirrors
-version: 1.0.1
+version: 1.0.2
 author: Steve Hamblett <steve.hamblett@linux.com>
 homepage: https://github.com/shamblett/json_object_lite
 
@@ -13,4 +13,12 @@ dev_dependencies:
   dart_dev: '^1.0.0'
   dart_style: '>=0.2.0 <0.3.0'
   dartdoc: '>=0.8.0 <=0.10.0'
+
+web:
+  compiler:
+    debug: dartdevc
+
+transformers:
+- test/pub_serve:
+    $include: test/**_test.dart
 
