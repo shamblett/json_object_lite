@@ -24,7 +24,7 @@ void _log(String obj) {
 /// noSuchMethod. The object is set to not immutable so properties can be
 /// added.
 @proxy
-class JsonObjectLite<E> extends Object implements Map, Iterable {
+class JsonObjectLite<E> extends Object implements Map {
   /// Default constructor.
   /// Creates a new empty map.
   JsonObjectLite() {
@@ -293,7 +293,7 @@ class JsonObjectLite<E> extends Object implements Map, Iterable {
     return _objectData.containsKey(_symbolToString(value));
   }
 
-  // Pass through to the innter _objectData map.
+  // Pass through to the inner _objectData map.
   bool get isNotEmpty => _objectData.isNotEmpty;
 
   // Pass through to the inner _objectData map.

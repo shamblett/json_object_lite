@@ -1,3 +1,6 @@
+**1.1.1**<br><br>
+Strong mode updates for pub
+
 **1.1.0**<br><br>
 Fix immutability to follow that of json_object, not reverse it
 
