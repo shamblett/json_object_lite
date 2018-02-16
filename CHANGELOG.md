@@ -1,3 +1,6 @@
+**1.1.2**<br><br>
+Pub updates
+
 **1.1.1**<br><br>
 Strong mode updates for pub
 

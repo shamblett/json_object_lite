@@ -5,6 +5,9 @@
 
 import 'package:json_object_lite/json_object_lite.dart';
 
+/// An example taken from the dartlang article for JSON object, found here
+/// https://webdev.dartlang.org/articles/get-data/json-web-service.
+
 @proxy
 class LanguageWebsite extends JsonObjectLite {
   LanguageWebsite(); // default constructor (empty) implementation
@@ -33,7 +36,7 @@ class Language extends JsonObjectLite {
     // from JSON constructor implementation
     return new JsonObjectLite.fromJsonString(
         json, new Language()); // as _LangaugeWebsite, return an instance
-    // of JsonObject, containing the json string and
+    // of JsonObjectLite, containing the json string and
     // injecting a _Language instance
   }
 }
