@@ -8,7 +8,6 @@ import 'package:json_object_lite/json_object_lite.dart';
 /// An example taken from the dartlang article for JSON object, found here
 /// https://webdev.dartlang.org/articles/get-data/json-web-service.
 
-@proxy
 class LanguageWebsite extends JsonObjectLite {
   LanguageWebsite(); // default constructor (empty) implementation
 
@@ -28,7 +27,6 @@ class LanguageWebsite extends JsonObjectLite {
   }
 }
 
-@proxy
 class Language extends JsonObjectLite {
   Language(); // empty, default constructor
 
@@ -51,14 +49,14 @@ int main() {
     "api": "api.dartlang.org"
   }
 }""";
-  final Language data = new Language.fromJsonString(responseText);
+  final dynamic data = new Language.fromJsonString(responseText);
 
   // tools can now validate the property access
   print(data.language); // should be dart
   print(data.targets[0]); // should be dartium
 
   // nested types are also strongly typed
-  final LanguageWebsite website = new LanguageWebsite.fromJsonObject(
+  final dynamic website = new LanguageWebsite.fromJsonObject(
       data.website); // contains a JsonObjectLite
   print(website.homepage);
   website.isImmutable = false; // Now we can extend it

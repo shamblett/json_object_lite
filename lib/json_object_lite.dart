@@ -23,7 +23,6 @@ void _log(String obj) {
 /// JsonObjectLite allows .property name access to JSON by using
 /// noSuchMethod. The object is set to not immutable so properties can be
 /// added.
-@proxy
 class JsonObjectLite<E> extends Object implements Map {
   /// Default constructor.
   /// Creates a new empty map.
@@ -37,7 +36,7 @@ class JsonObjectLite<E> extends Object implements Map {
   /// If [t] is given, will replace [t]'s contents from the string and return [t].
   ///
   /// If [recursive] is true, replaces all maps recursively with JsonObjects.
-  /// The default value is [true].
+  /// The default value is true.
   /// The object is set to immutable, the user must reset this to add more properties.
   factory JsonObjectLite.fromJsonString(String jsonString,
       [JsonObjectLite t, bool recursive = true]) {
@@ -56,7 +55,7 @@ class JsonObjectLite<E> extends Object implements Map {
   /// rather than a json string.
   ///
   /// If [recursive] is true, all values of the map will be converted
-  /// to [JsonObjectLite]s as well. The default value is [true].
+  /// to [JsonObjectLite]s as well. The default value is true.
   /// The object is set to immutable, the user must reset this to add more properties.
   JsonObjectLite.fromMap(Map map, [bool recursive = true]) {
     _objectData = map;
@@ -96,15 +95,11 @@ class JsonObjectLite<E> extends Object implements Map {
   /// or [JsonObjectLite.fromMap()].
   /// The default constructor [JsonObjectLite()], sets this value to
   /// false so properties can be added.
-  set isImmutable(bool state) => isExtendable = !state;
+  bool _isImmutable;
 
-  bool get isImmutable => !isExtendable;
+  set isImmutable(bool state) => _isImmutable = state;
 
-  @deprecated
-
-  /// For compatibility the isExtendable boolean is preserved, however new usage
-  /// should use isImmutable above. Usage is as per JsonObject.
-  bool isExtendable;
+  bool get isImmutable => _isImmutable;
 
   /// Returns a string representation of the underlying object data
   String toString() {
@@ -248,7 +243,7 @@ class JsonObjectLite<E> extends Object implements Map {
   dynamic lastWhere(bool test(dynamic value), {dynamic orElse}) =>
       this.toIterable().firstWhere(test, orElse: orElse);
 
-  Iterable<T> map<T>(dynamic f(dynamic element)) => this.toIterable().map(f);
+  //TODO Iterable<T> map<T>(dynamic f(dynamic element)) => this.toIterable().map(f);
 
   dynamic reduce(dynamic combine(dynamic value, dynamic element)) =>
       this.toIterable().reduce(combine);

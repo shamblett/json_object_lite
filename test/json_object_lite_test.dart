@@ -9,7 +9,6 @@ import 'dart:convert';
 import 'package:json_object_lite/json_object_lite.dart';
 import 'package:test/test.dart';
 
-@proxy
 class Person extends JsonObjectLite {
   Person() : super();
 
@@ -76,7 +75,7 @@ void main() {
       }
       """;
 
-      final JsonObjectLite o = new JsonObjectLite.fromJsonString(jsonString);
+      final dynamic o = new JsonObjectLite.fromJsonString(jsonString);
       expect(o.isImmutable, true);
 
       // Basic access
@@ -142,7 +141,7 @@ void main() {
         ]
       };
 
-      final JsonObjectLite o = new JsonObjectLite.fromMap(jsonMap);
+      final dynamic o = new JsonObjectLite.fromMap(jsonMap);
       expect(o.isImmutable, true);
 
       // Basic access
@@ -177,7 +176,7 @@ void main() {
       final JsonObjectLite o = new JsonObjectLite.fromMap(
           {"Name": "Fred", "Sex": "male", "Age": 40});
       expect(o.isImmutable, true);
-      final JsonObjectLite dest =
+      final dynamic dest =
       JsonObjectLite.toTypedJsonObjectLite(o, new JsonObjectLite());
       expect(dest.Name, "Fred");
       expect(dest.Sex, "male");
@@ -186,7 +185,7 @@ void main() {
     });
 
     test("Strong typing new", () {
-      final Person person = new Person();
+      final dynamic person = new Person();
       expect(person.isImmutable, false);
       bool thrown = false;
       try {
@@ -198,7 +197,7 @@ void main() {
     });
 
     test("Strong typing new extendable", () {
-      final Person person = new Person();
+      final dynamic person = new Person();
       expect(person.isImmutable, false);
       person.isImmutable = false;
       person.name = "Steve";
@@ -224,7 +223,7 @@ void main() {
         ]
       }
       """;
-      final Person person = new Person.fromString(jsonString);
+      final dynamic person = new Person.fromString(jsonString);
       expect(person.isImmutable, true);
       expect(person.addresses[0].address.line1, equals("1 the street"));
       person.isImmutable = false;
@@ -235,7 +234,7 @@ void main() {
 
   group("String handling", () {
     test("Stringify", () {
-      final JsonObjectLite person = new JsonObjectLite();
+      final dynamic person = new JsonObjectLite();
       person.isImmutable = false;
 
       // Dynamically create some properties
@@ -245,7 +244,7 @@ void main() {
       person.languages.add("Java");
 
       // create a new JsonObjectLite that we will inject
-      final JsonObjectLite address = new JsonObjectLite();
+      final dynamic address = new JsonObjectLite();
       address.isImmutable = false;
       address.line1 = "1 the street";
       address.postcode = "AB12 3DE";
@@ -267,7 +266,7 @@ void main() {
     });
 
     test("toString", () {
-      final JsonObjectLite person = new JsonObjectLite();
+      final dynamic person = new JsonObjectLite();
       person.isImmutable = false;
 
       // Dynamically create some properties
@@ -277,7 +276,7 @@ void main() {
       person.languages.add("Java");
 
       // create a new JsonObjectLite that we will inject
-      final JsonObjectLite address = new JsonObjectLite();
+      final dynamic address = new JsonObjectLite();
       address.isImmutable = false;
       address.line1 = "1 the street";
       address.postcode = "AB12 3DE";
@@ -326,7 +325,7 @@ void main() {
 
   group("Iterables", () {
     test("List", () {
-      final JsonObjectLite o = new JsonObjectLite();
+      final dynamic o = new JsonObjectLite();
       o.isImmutable = false;
       o.name = "Steve";
       o.age = 55;
@@ -346,7 +345,7 @@ void main() {
       o.sex2 = "male";
       expect(o.lastWhere((dynamic element) => element == 'male'), o.sex2);
       expect(o.singleWhere((dynamic element) => element == 'male'), o.sex);
-      final JsonObjectLite folder = new JsonObjectLite();
+      final dynamic folder = new JsonObjectLite();
       folder.isImmutable = false;
       folder.nfirst = 1;
       folder.nsecond = 2;
@@ -380,7 +379,7 @@ void main() {
       expect(folder.where((dynamic element) => element == 55), []);
       expect(folder.first, 1);
       expect(folder.last, 3);
-      final JsonObjectLite folder1 = new JsonObjectLite();
+      final dynamic folder1 = new JsonObjectLite();
       folder.isImmutable = false;
       folder1.none = 1;
       try {
@@ -392,7 +391,7 @@ void main() {
     });
 
     test("Map", () {
-      final JsonObjectLite o = new JsonObjectLite();
+      final dynamic o = new JsonObjectLite();
       o.isImmutable = false;
       o.name = "Steve";
       o.age = 55;
@@ -440,7 +439,7 @@ void main() {
       try {
         o['name'] = "fred";
       } catch (ex) {
-        expect(ex, new isInstanceOf<JsonObjectLiteException>());
+        expect(ex, const TypeMatcher<JsonObjectLiteException>());
         expect(
             ex.toString(), "JsonObjectException: JsonObject is not extendable");
         thrown = true;
@@ -450,7 +449,7 @@ void main() {
       try {
         o.putIfAbsent("house", () => 6);
       } catch (ex) {
-        expect(ex, new isInstanceOf<JsonObjectLiteException>());
+        expect(ex, const TypeMatcher<JsonObjectLiteException>());
         expect(
             ex.toString(), "JsonObjectException: JsonObject is not extendable");
         thrown = true;
@@ -460,7 +459,7 @@ void main() {
       try {
         o.clear();
       } catch (ex) {
-        expect(ex, new isInstanceOf<JsonObjectLiteException>());
+        expect(ex, const TypeMatcher<JsonObjectLiteException>());
         expect(
             ex.toString(), "JsonObjectException: JsonObject is not extendable");
         thrown = true;
@@ -470,7 +469,7 @@ void main() {
       try {
         o.remove("name");
       } catch (ex) {
-        expect(ex, new isInstanceOf<JsonObjectLiteException>());
+        expect(ex, const TypeMatcher<JsonObjectLiteException>());
         expect(
             ex.toString(), "JsonObjectException: JsonObject is not extendable");
         thrown = true;
@@ -479,12 +478,12 @@ void main() {
     });
 
     test("Special characters", () {
-      final JsonObjectLite o = new JsonObjectLite.fromMap(
+      final dynamic o = new JsonObjectLite.fromMap(
           {"_rev": "100678", "@rev2": "300400", "+": "200700"});
       expect(o._rev, "100678");
       expect(o["@rev2"], "300400");
       expect(o["+"], "200700");
-      final JsonObjectLite p = new JsonObjectLite.fromJsonString(
+      final dynamic p = new JsonObjectLite.fromJsonString(
           '{"_rev": "100678", "@rev2": "300400", "+": "200700"}');
       expect(p._rev, "100678");
       expect(p["@rev2"], "300400");
@@ -493,7 +492,7 @@ void main() {
 
     test("Debug", () {
       enableJsonObjectLiteDebugMessages = true;
-      final o = new JsonObjectLite();
+      final dynamic o = new JsonObjectLite();
       o.isImmutable = false;
       o.name = "fred";
       bool thrown = false;
