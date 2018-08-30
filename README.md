@@ -11,5 +11,6 @@ the original package, however there are more advanced packages you can use for t
 Other than that this is a faithful, lighter, re-implementation intended as a drop in replacement for 
 the original JsonObject. Please see the json_object documentation for further details.
 
-
+Note that for compatibility with Dart 2.0 only construction from strings is now supported, there are
+also a few other more minor updates, see the example for more details. 
 

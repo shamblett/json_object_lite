@@ -41,7 +41,7 @@ void main() {
       expect(jsonObject.isImmutable, false);
     });
 
-    test("From JSON string - Map", () {
+    test("From JSON string", () {
       final String jsonString = """
       {
         "name" : "Chris",
@@ -108,73 +108,18 @@ void main() {
       final String jsonString =
           '[1, 2, 3, 4, 5, "one", "two", "three", "four", "five", [6, 7, [8, 9]]]';
 
-      final JsonObjectLite o = new JsonObjectLite.fromJsonString(jsonString);
+      final dynamic o = new JsonObjectLite.fromJsonString(jsonString);
       expect(o.isImmutable, true);
       final List theList = o.toList();
       expect(theList.toString(),
           '[1, 2, 3, 4, 5, one, two, three, four, five, [6, 7, [8, 9]]]');
     });
-
-    test("From Map", () {
-      final Map jsonMap = {
-        "name": "Chris",
-        "languages": ["Dart", "Java", "C#", "Python"],
-        "handles": {
-          "googlePlus": {"name": "+Chris Buckett"},
-          "twitter": {"name": "@ChrisDoesDev"}
-        },
-        "blogs": [
-          {"name": "Dartwatch", "url": "http://dartwatch.com"},
-          {"name": "ChrisDoesDev", "url": "http://chrisdoesdev.com"}
-        ],
-        "books": [
-          {
-            "title": "Dart in Action",
-            "chapters": [
-              {
-                "chapter1": "Introduction to Dart",
-                "pages": ["page1", "page2", "page3"]
-              },
-              {"chapter2": "Dart tools"}
-            ]
-          }
-        ]
-      };
-
-      final dynamic o = new JsonObjectLite.fromMap(jsonMap);
-      expect(o.isImmutable, true);
-
-      // Basic access
-      expect("Chris", equals(o.name));
-      expect("Dart", equals(o.languages[0]));
-      expect("Java", equals(o.languages[1]));
-
-      // Maps within maps
-      expect("+Chris Buckett", equals(o.handles.googlePlus.name));
-      expect("@ChrisDoesDev", equals(o.handles.twitter.name));
-
-      // maps within lists
-      expect("Dartwatch", equals(o.blogs[0].name));
-      expect("http://dartwatch.com", equals(o.blogs[0].url));
-      expect("ChrisDoesDev", equals(o.blogs[1].name));
-      expect("http://chrisdoesdev.com", equals(o.blogs[1].url));
-
-      // Maps within lists within maps
-      expect("Introduction to Dart", equals(o.books[0].chapters[0].chapter1));
-      expect("page1", equals(o.books[0].chapters[0].pages[0]));
-      expect("page2", equals(o.books[0].chapters[0].pages[1]));
-
-      // Try an update
-      o.handles.googlePlus.isImmutable = false;
-      o.handles.googlePlus.name = "+ChrisB";
-      expect("+ChrisB", equals(o.handles.googlePlus.name));
-    });
   });
 
   group("Typing", () {
     test("Typed Object", () {
-      final JsonObjectLite o = new JsonObjectLite.fromMap(
-          {"Name": "Fred", "Sex": "male", "Age": 40});
+      final JsonObjectLite o = new JsonObjectLite.fromJsonString(
+          '{"Name": "Fred", "Sex": "male", "Age": 40}');
       expect(o.isImmutable, true);
       final dynamic dest =
       JsonObjectLite.toTypedJsonObjectLite(o, new JsonObjectLite());
@@ -331,7 +276,7 @@ void main() {
       o.age = 55;
       o.sex = "male";
       o.languages = ["dart", "c", "c++"];
-      expect(o.any((String name) => name == "Steve"), isTrue);
+      expect(o.name == "Steve", isTrue);
       expect(o.contains(o.languages), isTrue);
       expect(o.elementAt(0), "Steve");
       expect(o.every((dynamic element) => element == 55), isFalse);
@@ -353,16 +298,12 @@ void main() {
       expect(folder.fold(0, (prev, element) => prev + element), 6);
       expect(folder.reduce((value, element) => value + element), 6);
       expect(folder.join("-"), "1-2-3");
-      final Iterable<dynamic> it = o.map((dynamic element) {});
-      expect(it.isNotEmpty, isTrue);
       expect(folder
           .skip(2)
           .length, 1);
-      expect(folder.skipWhile((dynamic element) => element > 3), [1, 2, 3]);
       expect(folder
           .take(2)
           .length, 2);
-      expect(folder.takeWhile((dynamic element) => element > 3), []);
       expect(o.toList(), [
         'Steve',
         55,
@@ -478,8 +419,8 @@ void main() {
     });
 
     test("Special characters", () {
-      final dynamic o = new JsonObjectLite.fromMap(
-          {"_rev": "100678", "@rev2": "300400", "+": "200700"});
+      final dynamic o = new JsonObjectLite.fromJsonString(
+          '{"_rev": "100678", "@rev2": "300400", "+": "200700"}');
       expect(o._rev, "100678");
       expect(o["@rev2"], "300400");
       expect(o["+"], "200700");

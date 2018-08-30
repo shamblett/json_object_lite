@@ -51,18 +51,19 @@ class JsonObjectLite<E> extends Object implements Map {
     return t;
   }
 
-  /// An alternate constructor, allows creating directly from a map
-  /// rather than a json string.
-  ///
-  /// If [recursive] is true, all values of the map will be converted
-  /// to [JsonObjectLite]s as well. The default value is true.
+  /// Private fromMap constructor.
   /// The object is set to immutable, the user must reset this to add more properties.
-  JsonObjectLite.fromMap(Map map, [bool recursive = true]) {
-    _objectData = map;
-    if (recursive) {
-      _extractElements(_objectData);
+  factory JsonObjectLite._fromMap(Map<dynamic, dynamic> map,
+      [JsonObjectLite t, bool recursive = true]) {
+    if (t == null) {
+      t = new JsonObjectLite();
     }
-    isImmutable = true;
+    t._objectData = map;
+    if (recursive) {
+      t._extractElements(t._objectData);
+    }
+    t.isImmutable = true;
+    return t;
   }
 
   /// Typed JsonObjectLite
@@ -174,8 +175,8 @@ class JsonObjectLite<E> extends Object implements Map {
       // Iterate through each of the k,v pairs, replacing maps with jsonObjects
       data.forEach((key, value) {
         if (value is Map) {
-          // Replace the existing Map with a JsonObject
-          data[key] = new JsonObjectLite.fromMap(value);
+          // Replace the existing Map with a JsonObjectLite
+          data[key] = new JsonObjectLite._fromMap(value);
         } else if (value is List) {
           // Recurse
           _extractElements(value);
@@ -193,7 +194,7 @@ class JsonObjectLite<E> extends Object implements Map {
           _extractElements(listItem);
         } else if (listItem is Map) {
           // Replace the existing Map with a JsonObject
-          data[i] = new JsonObjectLite.fromMap(listItem);
+          data[i] = new JsonObjectLite._fromMap(listItem);
         }
       }
     }
@@ -243,8 +244,6 @@ class JsonObjectLite<E> extends Object implements Map {
   dynamic lastWhere(bool test(dynamic value), {dynamic orElse}) =>
       this.toIterable().firstWhere(test, orElse: orElse);
 
-  //TODO Iterable<T> map<T>(dynamic f(dynamic element)) => this.toIterable().map(f);
-
   dynamic reduce(dynamic combine(dynamic value, dynamic element)) =>
       this.toIterable().reduce(combine);
 
@@ -253,13 +252,7 @@ class JsonObjectLite<E> extends Object implements Map {
 
   Iterable<E> skip(int n) => this.toIterable().skip(n);
 
-  Iterable<E> skipWhile(bool test(dynamic value)) =>
-      this.toIterable().skipWhile(test);
-
   Iterable<E> take(int n) => this.toIterable().take(n);
-
-  Iterable<E> takeWhile(bool test(dynamic value)) =>
-      this.toIterable().takeWhile(test);
 
   List<dynamic> toList({bool growable: true}) =>
       this.toIterable().toList(growable: growable);
