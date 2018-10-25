@@ -13,3 +13,7 @@ doc/api/
 
 # Dart 2 additions
 .dart_tool/
+
+# No idea
+.idea
+
