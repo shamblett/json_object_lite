@@ -6,9 +6,11 @@
  * Based on json_object (C) 2013 Chris Buckett (chrisbuckett@gmail.com)
  */
 
+// ignore_for_file: avoid_positional_boolean_parameters
+
 library json_object_lite;
 
-import "dart:convert";
+import 'dart:convert';
 
 /// Set to true to as required
 bool enableJsonObjectLiteDebugMessages = false;
@@ -23,11 +25,11 @@ void _log(String obj) {
 /// JsonObjectLite allows .property name access to JSON by using
 /// noSuchMethod. The object is set to not immutable so properties can be
 /// added.
-class JsonObjectLite<E> extends Object implements Map {
+class JsonObjectLite<E> extends Object implements Map<dynamic, dynamic> {
   /// Default constructor.
   /// Creates a new empty map.
   JsonObjectLite() {
-    _objectData = new Map();
+    _objectData = Map<dynamic, dynamic>();
     isImmutable = false;
   }
 
@@ -39,10 +41,8 @@ class JsonObjectLite<E> extends Object implements Map {
   /// The default value is true.
   /// The object is set to immutable, the user must reset this to add more properties.
   factory JsonObjectLite.fromJsonString(String jsonString,
-      [JsonObjectLite t, bool recursive = true]) {
-    if (t == null) {
-      t = new JsonObjectLite();
-    }
+      [JsonObjectLite<dynamic> t, bool recursive = true]) {
+    t ??= JsonObjectLite<dynamic>();
     t._objectData = decoder.convert(jsonString);
     if (recursive) {
       t._extractElements(t._objectData);
@@ -54,10 +54,8 @@ class JsonObjectLite<E> extends Object implements Map {
   /// Private fromMap constructor.
   /// The object is set to immutable, the user must reset this to add more properties.
   factory JsonObjectLite._fromMap(Map<dynamic, dynamic> map,
-      [JsonObjectLite t, bool recursive = true]) {
-    if (t == null) {
-      t = new JsonObjectLite();
-    }
+      [JsonObjectLite<dynamic> t, bool recursive = true]) {
+    t ??= JsonObjectLite<dynamic>();
     t._objectData = map;
     if (recursive) {
       t._extractElements(t._objectData);
@@ -67,8 +65,8 @@ class JsonObjectLite<E> extends Object implements Map {
   }
 
   /// Typed JsonObjectLite
-  static JsonObjectLite toTypedJsonObjectLite(
-      JsonObjectLite src, JsonObjectLite dest) {
+  static JsonObjectLite<dynamic> toTypedJsonObjectLite(
+      JsonObjectLite<dynamic> src, JsonObjectLite<dynamic> dest) {
     dest._objectData = src._objectData;
     if (src.isImmutable) {
       dest.isImmutable = true;
@@ -79,8 +77,11 @@ class JsonObjectLite<E> extends Object implements Map {
   /// Contains either a [List] or [Map]
   dynamic _objectData;
 
-  static JsonEncoder encoder = new JsonEncoder();
-  static JsonDecoder decoder = new JsonDecoder(null);
+  /// JSON encoder
+  static const JsonEncoder encoder = JsonEncoder();
+
+  /// JSON decoder
+  static const JsonDecoder decoder = JsonDecoder();
 
   /// isImmutable indicates if a new item can be added to the internal
   /// map via the noSuchMethod property, or the functions inherited from the
@@ -96,16 +97,11 @@ class JsonObjectLite<E> extends Object implements Map {
   /// or [JsonObjectLite.fromMap()].
   /// The default constructor [JsonObjectLite()], sets this value to
   /// false so properties can be added.
-  bool _isImmutable;
-
-  set isImmutable(bool state) => _isImmutable = state;
-
-  bool get isImmutable => _isImmutable;
+  bool isImmutable;
 
   /// Returns a string representation of the underlying object data
-  String toString() {
-    return encoder.convert(_objectData);
-  }
+  @override
+  String toString() => encoder.convert(_objectData);
 
   /// Returns either the underlying parsed data as an iterable list (if the
   /// underlying data contains a list), or returns the map.values (if the
