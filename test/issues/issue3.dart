@@ -14,4 +14,9 @@ void main() {
     obj.foo = JsonObjectLite<dynamic>.fromJsonString('[1,2,3]');
     print(obj);
   });
+
+  test('Issue 3 fix 1', () {
+    final JsonObjectLite<dynamic> obj = JsonObjectLite<dynamic>.fromJsonString('{"foo":[1,2,3]}');
+    print(obj);
+  });
 }

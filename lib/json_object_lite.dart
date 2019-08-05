@@ -25,7 +25,7 @@ void _log(String obj) {
 /// JsonObjectLite allows .property name access to JSON by using
 /// noSuchMethod. The object is set to not immutable so properties can be
 /// added.
-class JsonObjectLite<E> extends Object implements Map<dynamic, dynamic> {
+class JsonObjectLite<E> implements Map<dynamic, dynamic>  {
   /// Default constructor.
   /// Creates a new empty map.
   JsonObjectLite() {
@@ -289,8 +289,9 @@ class JsonObjectLite<E> extends Object implements Map<dynamic, dynamic> {
 
   // Pass through to the inner _objectData map.
   @override
-  void forEach(void func(dynamic key, dynamic value)) =>
-      _objectData.forEach(func);
+  void forEach(void func(dynamic key, dynamic value)) {
+    _objectData.forEach(func);
+  }
 
   // Pass through to the inner _objectData map.
   @override
