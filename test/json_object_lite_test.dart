@@ -133,7 +133,7 @@ void main() {
       bool thrown = false;
       try {
         expect(throwsNoSuchMethodError, person.name);
-      } on Exception {
+      } on NoSuchMethodError {
         thrown = true;
       }
       expect(thrown, true);
@@ -446,7 +446,7 @@ void main() {
       bool thrown = false;
       try {
         print(o.address);
-      } on Exception {
+      } on NoSuchMethodError {
         thrown = true;
       }
       expect(thrown, true);
