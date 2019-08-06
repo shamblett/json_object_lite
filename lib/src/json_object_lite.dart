@@ -8,9 +8,7 @@
 
 // ignore_for_file: avoid_positional_boolean_parameters
 // ignore_for_file: public_member_api_docs
-library json_object_lite;
-
-import 'dart:convert';
+part of json_object_lite;
 
 /// Set to true to as required
 bool enableJsonObjectLiteDebugMessages = false;
@@ -25,7 +23,7 @@ void _log(String obj) {
 /// JsonObjectLite allows .property name access to JSON by using
 /// noSuchMethod. The object is set to not immutable so properties can be
 /// added.
-class JsonObjectLite<E> implements Map<dynamic, dynamic>  {
+class JsonObjectLite<E> implements Map<dynamic, dynamic> {
   /// Default constructor.
   /// Creates a new empty map.
   JsonObjectLite() {
@@ -78,7 +76,7 @@ class JsonObjectLite<E> implements Map<dynamic, dynamic>  {
   dynamic _objectData;
 
   /// JSON encoder
-  static const JsonEncoder encoder = JsonEncoder();
+  static const JsonEncoderLite encoder = JsonEncoderLite();
 
   /// JSON decoder
   static const JsonDecoder decoder = JsonDecoder();

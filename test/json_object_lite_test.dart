@@ -6,7 +6,7 @@
  */
 
 import 'dart:convert';
-import 'package:json_object_lite/src/json_object_lite.dart';
+import 'package:json_object_lite/json_object_lite.dart';
 import 'package:test/test.dart';
 
 class Person extends JsonObjectLite<dynamic> {

@@ -12,4 +12,5 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
+part 'src/json_object_lite.dart';
 part 'src/support/json.dart';

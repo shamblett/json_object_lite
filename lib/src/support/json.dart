@@ -59,7 +59,7 @@ class JsonCyclicError extends JsonUnsupportedObjectError {
 }
 
 /// This class converts JSON objects to strings.
-class JsonEncoder {
+class JsonEncoderLite {
   /// Creates a JSON encoder.
   ///
   /// The JSON encoder handles numbers, strings, booleans, null, lists and
@@ -70,7 +70,7 @@ class JsonEncoder {
   ///
   /// If [toEncodable] is omitted, it defaults to calling `.toJson()` on
   /// the object.
-  const JsonEncoder([toEncodable(dynamic object)])
+  const JsonEncoderLite([toEncodable(dynamic object)])
       : indent = null,
         _toEncodable = toEncodable;
 
@@ -90,7 +90,7 @@ class JsonEncoder {
   ///
   /// If [toEncodable] is omitted, it defaults to calling `.toJson()` on
   /// the object.
-  const JsonEncoder.withIndent(this.indent, [toEncodable(dynamic object)])
+  const JsonEncoderLite.withIndent(this.indent, [toEncodable(dynamic object)])
       : _toEncodable = toEncodable;
 
   /// The string used for indention.
@@ -205,16 +205,17 @@ class JsonUtf8Encoder extends Converter<Object, List<int>> {
   /// Convert [object] into UTF-8 encoded JSON.
   @override
   List<int> convert(Object object) {
-    final List<int> bytes = <int>[];
+    final List<List<int>> bytes = <List<int>>[];
     // The `stringify` function always converts into chunks.
     // Collect the chunks into the `bytes` list, then combine them afterwards.
     void addChunk(Uint8List chunk, int start, int end) {
+      Uint8List chunkTmp;
       if (start > 0 || end < chunk.length) {
         final int length = end - start;
-        chunk =
+        chunkTmp =
             Uint8List.view(chunk.buffer, chunk.offsetInBytes + start, length);
       }
-      bytes.add(chunk);
+      bytes.add(chunkTmp);
     }
 
     _JsonUtf8Stringifier.stringify(
@@ -733,8 +734,6 @@ class _JsonUtf8Stringifier extends _JsonStringifier {
 
   /// Write a string that is known to not have non-ASCII characters.
   void writeAsciiString(String string) {
-    // TODO(lrn): Optimize by copying directly into buffer instead of going
-    // through writeCharCode;
     for (int i = 0; i < string.length; i++) {
       final int char = string.codeUnitAt(i);
       assert(char <= 0x7f);
@@ -749,9 +748,6 @@ class _JsonUtf8Stringifier extends _JsonStringifier {
 
   @override
   void writeStringSlice(String string, int start, int end) {
-    // TODO(lrn): Optimize by copying directly into buffer instead of going
-    // through writeCharCode/writeByte. Assumption is the most characters
-    // in starings are plain ASCII.
     for (int i = start; i < end; i++) {
       int char = string.codeUnitAt(i);
       if (char <= 0x7f) {
@@ -826,7 +822,8 @@ class _JsonUtf8StringifierPretty extends _JsonUtf8Stringifier
   final List<int> indent;
 
   @override
-  void writeIndentation(int count) {
+  void writeIndentation(int countParam) {
+    int count = countParam;
     final List<int> indent = this.indent;
     final int indentLength = indent.length;
     if (indentLength == 1) {
