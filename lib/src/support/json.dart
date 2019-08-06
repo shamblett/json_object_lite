@@ -318,6 +318,7 @@ abstract class _JsonStringifier {
   static const int charR = 0x72;
   static const int charT = 0x74;
   static const int charU = 0x75;
+  static const String _typeMarker = 'JsonObjectLite';
 
   /// List of objects currently being traversed. Used to detect cycles.
   final List<Object> _seen = <Object>[];
@@ -449,6 +450,27 @@ abstract class _JsonStringifier {
   /// Returns true if the value is one of these types, and false if not.
   /// If a value is both a [List] and a [Map], it's serialized as a [List].
   bool writeJsonValue(Object object) {
+    // Check for json object lite type, we must process this differently
+    // as the 'is' operator returns this as a Map type
+    bool isMap = false;
+    bool isList = false;
+    bool isLite = false;
+    JsonObjectLite<dynamic> liteObject;
+    if (object.runtimeType.toString().contains(_typeMarker)) {
+      liteObject = object;
+      isLite = true;
+      if (liteObject._objectData is Map) {
+        isMap = true;
+      } else if (liteObject._objectData is List) {
+        isList = true;
+      }
+    } else {
+      if (object is Map) {
+        isMap = true;
+      } else if (object is List) {
+        isList = true;
+      }
+    }
     if (object is num) {
       if (!object.isFinite) {
         return false;
@@ -469,15 +491,24 @@ abstract class _JsonStringifier {
       writeStringContent(object);
       writeString('"');
       return true;
-    } else if (object is List) {
+    } else if (isList) {
       _checkCycle(object);
-      writeList(object);
+      if (isLite) {
+        writeList(liteObject._objectData);
+      } else {
+        writeList(object);
+      }
       _removeSeen(object);
       return true;
-    } else if (object is Map) {
+    } else if (isMap) {
       _checkCycle(object);
-      // writeMap can fail if keys are not all strings.
-      final bool success = writeMap(object);
+      bool success = false;
+      if (isLite) {
+        // writeMap can fail if keys are not all strings.
+        success = writeMap(liteObject._objectData);
+      } else {
+        success = writeMap(object);
+      }
       _removeSeen(object);
       return success;
     } else {
