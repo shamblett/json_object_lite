@@ -3,7 +3,7 @@
 /// http://www.dartlang.org/articles/json-web-service/
 ///
 
-import 'package:json_object_lite/json_object_lite.dart';
+import 'package:json_object_lite/src/json_object_lite.dart';
 
 /// The Dart 2.0 update has changed how JsonObjectLite is used, previously you could do this :-
 ///
