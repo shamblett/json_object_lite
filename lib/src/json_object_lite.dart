@@ -75,7 +75,7 @@ class JsonObjectLite<E> implements Map<dynamic, dynamic> {
   /// Contains either a [List] or [Map]
   dynamic _objectData;
 
-  /// JSON encoder
+  /// JSON encoder, use our encoder not the one from convert
   static const JsonEncoderLite encoder = JsonEncoderLite();
 
   /// JSON decoder
