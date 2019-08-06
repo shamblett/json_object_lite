@@ -300,6 +300,8 @@ class _JsonUtf8EncoderSink extends ChunkedConversionSink<Object> {
 /// This is an abstract implementation that doesn't decide on the output
 /// format, but writes the JSON through abstract methods like [writeString].
 abstract class _JsonStringifier {
+  _JsonStringifier(toEncodable(dynamic o)) : _toEncodable = toEncodable;
+
   // Character code constants.
   static const int backspace = 0x08;
   static const int tab = 0x09;
@@ -307,22 +309,20 @@ abstract class _JsonStringifier {
   static const int carriageReturn = 0x0d;
   static const int formFeed = 0x0c;
   static const int quote = 0x22;
-  static const int char_0 = 0x30;
+  static const int char0 = 0x30;
   static const int backslash = 0x5c;
-  static const int char_b = 0x62;
-  static const int char_f = 0x66;
-  static const int char_n = 0x6e;
-  static const int char_r = 0x72;
-  static const int char_t = 0x74;
-  static const int char_u = 0x75;
+  static const int charB = 0x62;
+  static const int charF = 0x66;
+  static const int charN = 0x6e;
+  static const int charR = 0x72;
+  static const int charT = 0x74;
+  static const int charU = 0x75;
 
   /// List of objects currently being traversed. Used to detect cycles.
-  final List _seen = [];
+  final List<Object> _seen = <Object>[];
 
   /// Function called for each un-encodable object encountered.
   final Function(dynamic) _toEncodable;
-
-  _JsonStringifier(toEncodable(o)) : _toEncodable = toEncodable;
 
   String get _partialResult;
 
@@ -343,41 +343,47 @@ abstract class _JsonStringifier {
 
   /// Write, and suitably escape, a string's content as a JSON string literal.
   void writeStringContent(String s) {
-    var offset = 0;
-    final length = s.length;
-    for (var i = 0; i < length; i++) {
-      var charCode = s.codeUnitAt(i);
-      if (charCode > backslash) continue;
+    int offset = 0;
+    final int length = s.length;
+    for (int i = 0; i < length; i++) {
+      final int charCode = s.codeUnitAt(i);
+      if (charCode > backslash) {
+        continue;
+      }
       if (charCode < 32) {
-        if (i > offset) writeStringSlice(s, offset, i);
+        if (i > offset) {
+          writeStringSlice(s, offset, i);
+        }
         offset = i + 1;
         writeCharCode(backslash);
         switch (charCode) {
           case backspace:
-            writeCharCode(char_b);
+            writeCharCode(charB);
             break;
           case tab:
-            writeCharCode(char_t);
+            writeCharCode(charT);
             break;
           case newline:
-            writeCharCode(char_n);
+            writeCharCode(charN);
             break;
           case formFeed:
-            writeCharCode(char_f);
+            writeCharCode(charF);
             break;
           case carriageReturn:
-            writeCharCode(char_r);
+            writeCharCode(charR);
             break;
           default:
-            writeCharCode(char_u);
-            writeCharCode(char_0);
-            writeCharCode(char_0);
+            writeCharCode(charU);
+            writeCharCode(char0);
+            writeCharCode(char0);
             writeCharCode(hexDigit((charCode >> 4) & 0xf));
             writeCharCode(hexDigit(charCode & 0xf));
             break;
         }
       } else if (charCode == quote || charCode == backslash) {
-        if (i > offset) writeStringSlice(s, offset, i);
+        if (i > offset) {
+          writeStringSlice(s, offset, i);
+        }
         offset = i + 1;
         writeCharCode(backslash);
         writeCharCode(charCode);
@@ -394,8 +400,8 @@ abstract class _JsonStringifier {
   ///
   /// Records the object if it isn't already seen. Should have a matching call to
   /// [_removeSeen] when the object is no longer being traversed.
-  void _checkCycle(object) {
-    for (var i = 0; i < _seen.length; i++) {
+  void _checkCycle(Object object) {
+    for (int i = 0; i < _seen.length; i++) {
       if (identical(object, _seen[i])) {
         throw JsonCyclicError(object);
       }
@@ -407,7 +413,7 @@ abstract class _JsonStringifier {
   ///
   /// Should be called in the opposite order of the matching [_checkCycle]
   /// calls.
-  void _removeSeen(object) {
+  void _removeSeen(Object object) {
     assert(_seen.isNotEmpty);
     assert(identical(_seen.last, object));
     _seen.removeLast();
@@ -417,19 +423,21 @@ abstract class _JsonStringifier {
   ///
   /// If [object] isn't directly encodable, the [_toEncodable] function gets one
   /// chance to return a replacement which is encodable.
-  void writeObject(object) {
+  void writeObject(Object object) {
     // Tries stringifying object directly. If it's not a simple value, List or
     // Map, call toJson() to get a custom representation and try serializing
     // that.
-    if (writeJsonValue(object)) return;
+    if (writeJsonValue(object)) {
+      return;
+    }
     _checkCycle(object);
     try {
-      var customJson = _toEncodable(object);
+      final dynamic customJson = _toEncodable(object);
       if (!writeJsonValue(customJson)) {
         throw JsonUnsupportedObjectError(object, partialResult: _partialResult);
       }
       _removeSeen(object);
-    } catch (e) {
+    } on Exception catch (e) {
       throw JsonUnsupportedObjectError(object,
           cause: e, partialResult: _partialResult);
     }
@@ -439,9 +447,11 @@ abstract class _JsonStringifier {
   ///
   /// Returns true if the value is one of these types, and false if not.
   /// If a value is both a [List] and a [Map], it's serialized as a [List].
-  bool writeJsonValue(object) {
+  bool writeJsonValue(Object object) {
     if (object is num) {
-      if (!object.isFinite) return false;
+      if (!object.isFinite) {
+        return false;
+      }
       writeNumber(object);
       return true;
     } else if (identical(object, true)) {
@@ -466,7 +476,7 @@ abstract class _JsonStringifier {
     } else if (object is Map) {
       _checkCycle(object);
       // writeMap can fail if keys are not all strings.
-      var success = writeMap(object);
+      final bool success = writeMap(object);
       _removeSeen(object);
       return success;
     } else {
@@ -475,11 +485,11 @@ abstract class _JsonStringifier {
   }
 
   /// Serialize a [List].
-  void writeList(List list) {
+  void writeList(List<dynamic> list) {
     writeString('[');
     if (list.isNotEmpty) {
       writeObject(list[0]);
-      for (var i = 1; i < list.length; i++) {
+      for (int i = 1; i < list.length; i++) {
         writeString(',');
         writeObject(list[i]);
       }
@@ -488,25 +498,27 @@ abstract class _JsonStringifier {
   }
 
   /// Serialize a [Map].
-  bool writeMap(Map map) {
+  bool writeMap(Map<dynamic, dynamic> map) {
     if (map.isEmpty) {
-      writeString("{}");
+      writeString('{}');
       return true;
     }
-    var keyValueList = List(map.length * 2);
-    var i = 0;
-    var allStringKeys = true;
-    map.forEach((key, value) {
+    final List<dynamic> keyValueList = List<dynamic>(map.length * 2);
+    int i = 0;
+    bool allStringKeys = true;
+    map.forEach((dynamic key, dynamic value) {
       if (key is! String) {
         allStringKeys = false;
       }
       keyValueList[i++] = key;
       keyValueList[i++] = value;
     });
-    if (!allStringKeys) return false;
+    if (!allStringKeys) {
+      return false;
+    }
     writeString('{');
-    var separator = '"';
-    for (var i = 0; i < keyValueList.length; i += 2) {
+    String separator = '"';
+    for (int i = 0; i < keyValueList.length; i += 2) {
       writeString(separator);
       separator = ',"';
       writeStringContent(keyValueList[i]);
@@ -528,7 +540,8 @@ abstract class _JsonPrettyPrintMixin implements _JsonStringifier {
   /// Add [indentLevel] indentations to the JSON output.
   void writeIndentation(int indentLevel);
 
-  void writeList(List list) {
+  @override
+  void writeList(List<dynamic> list) {
     if (list.isEmpty) {
       writeString('[]');
     } else {
@@ -536,7 +549,7 @@ abstract class _JsonPrettyPrintMixin implements _JsonStringifier {
       _indentLevel++;
       writeIndentation(_indentLevel);
       writeObject(list[0]);
-      for (var i = 1; i < list.length; i++) {
+      for (int i = 1; i < list.length; i++) {
         writeString(',\n');
         writeIndentation(_indentLevel);
         writeObject(list[i]);
@@ -548,28 +561,31 @@ abstract class _JsonPrettyPrintMixin implements _JsonStringifier {
     }
   }
 
-  bool writeMap(Map map) {
+  @override
+  bool writeMap(Map<dynamic, dynamic> map) {
     if (map.isEmpty) {
-      writeString("{}");
+      writeString('{}');
       return true;
     }
-    var keyValueList = List(map.length * 2);
-    var i = 0;
-    var allStringKeys = true;
-    map.forEach((key, value) {
+    final List<dynamic> keyValueList = List<dynamic>(map.length * 2);
+    int i = 0;
+    bool allStringKeys = true;
+    map.forEach((dynamic key, dynamic value) {
       if (key is! String) {
         allStringKeys = false;
       }
       keyValueList[i++] = key;
       keyValueList[i++] = value;
     });
-    if (!allStringKeys) return false;
+    if (!allStringKeys) {
+      return false;
+    }
     writeString('{\n');
     _indentLevel++;
-    var separator = "";
-    for (var i = 0; i < keyValueList.length; i += 2) {
+    String separator = '';
+    for (int i = 0; i < keyValueList.length; i += 2) {
       writeString(separator);
-      separator = ",\n";
+      separator = ',\n';
       writeIndentation(_indentLevel);
       writeString('"');
       writeStringContent(keyValueList[i]);
@@ -586,10 +602,10 @@ abstract class _JsonPrettyPrintMixin implements _JsonStringifier {
 
 /// A specialization of [_JsonStringifier] that writes its JSON to a string.
 class _JsonStringStringifier extends _JsonStringifier {
-  final StringSink _sink;
-
   _JsonStringStringifier(this._sink, dynamic Function(dynamic) _toEncodable)
       : super(_toEncodable);
+
+  final StringSink _sink;
 
   /// Convert object to a string.
   ///
@@ -600,8 +616,9 @@ class _JsonStringStringifier extends _JsonStringifier {
   /// with newlines and indentation. The `indent` string is added as indentation
   /// for each indentation level. It should only contain valid JSON whitespace
   /// characters (space, tab, carriage return or line feed).
-  static String stringify(object, toEncodable(o), String indent) {
-    var output = StringBuffer();
+  static String stringify(
+      Object object, toEncodable(dynamic o), String indent) {
+    final StringBuffer output = StringBuffer();
     printOn(object, output, toEncodable, indent);
     return output.toString();
   }
@@ -610,7 +627,7 @@ class _JsonStringStringifier extends _JsonStringifier {
   ///
   /// The result is written piecemally to the sink.
   static void printOn(
-      object, StringSink output, toEncodable(o), String indent) {
+      Object object, StringSink output, toEncodable(dynamic o), String indent) {
     _JsonStringifier stringifier;
     if (indent == null) {
       stringifier = _JsonStringStringifier(output, toEncodable);
@@ -620,20 +637,25 @@ class _JsonStringStringifier extends _JsonStringifier {
     stringifier.writeObject(object);
   }
 
+  @override
   String get _partialResult => _sink is StringBuffer ? _sink.toString() : null;
 
+  @override
   void writeNumber(num number) {
     _sink.write(number.toString());
   }
 
+  @override
   void writeString(String string) {
     _sink.write(string);
   }
 
+  @override
   void writeStringSlice(String string, int start, int end) {
     _sink.write(string.substring(start, end));
   }
 
+  @override
   void writeCharCode(int charCode) {
     _sink.writeCharCode(charCode);
   }
@@ -641,13 +663,17 @@ class _JsonStringStringifier extends _JsonStringifier {
 
 class _JsonStringStringifierPretty extends _JsonStringStringifier
     with _JsonPrettyPrintMixin {
-  final String _indent;
-
-  _JsonStringStringifierPretty(StringSink sink, toEncodable(o), this._indent)
+  _JsonStringStringifierPretty(
+      StringSink sink, toEncodable(dynamic o), this._indent)
       : super(sink, toEncodable);
 
+  final String _indent;
+
+  @override
   void writeIndentation(int count) {
-    for (var i = 0; i < count; i++) writeString(_indent);
+    for (int i = 0; i < count; i++) {
+      writeString(_indent);
+    }
   }
 }
 
@@ -656,14 +682,14 @@ class _JsonStringStringifierPretty extends _JsonStringStringifier
 /// The JSON text is UTF-8 encoded and written to [Uint8List] buffers.
 /// The buffers are then passed back to a user provided callback method.
 class _JsonUtf8Stringifier extends _JsonStringifier {
+  _JsonUtf8Stringifier(toEncodable(dynamic o), this.bufferSize, this.addChunk)
+      : buffer = Uint8List(bufferSize),
+        super(toEncodable);
+
   final int bufferSize;
   final void Function(Uint8List list, int start, int end) addChunk;
   Uint8List buffer;
   int index = 0;
-
-  _JsonUtf8Stringifier(toEncodable(o), this.bufferSize, this.addChunk)
-      : buffer = Uint8List(bufferSize),
-        super(toEncodable);
 
   /// Convert [object] to UTF-8 encoded JSON.
   ///
@@ -674,7 +700,7 @@ class _JsonUtf8Stringifier extends _JsonStringifier {
   ///
   /// If [indent] is non-`null`, the result will be "pretty-printed" with extra
   /// newlines and indentation, using [indent] as the indentation.
-  static void stringify(Object object, List<int> indent, toEncodable(o),
+  static void stringify(Object object, List<int> indent, toEncodable(dynamic o),
       int bufferSize, void addChunk(Uint8List chunk, int start, int end)) {
     _JsonUtf8Stringifier stringifier;
     if (indent != null) {
@@ -697,8 +723,10 @@ class _JsonUtf8Stringifier extends _JsonStringifier {
     index = 0;
   }
 
+  @override
   String get _partialResult => null;
 
+  @override
   void writeNumber(num number) {
     writeAsciiString(number.toString());
   }
@@ -707,29 +735,31 @@ class _JsonUtf8Stringifier extends _JsonStringifier {
   void writeAsciiString(String string) {
     // TODO(lrn): Optimize by copying directly into buffer instead of going
     // through writeCharCode;
-    for (var i = 0; i < string.length; i++) {
-      var char = string.codeUnitAt(i);
+    for (int i = 0; i < string.length; i++) {
+      final int char = string.codeUnitAt(i);
       assert(char <= 0x7f);
       writeByte(char);
     }
   }
 
+  @override
   void writeString(String string) {
     writeStringSlice(string, 0, string.length);
   }
 
+  @override
   void writeStringSlice(String string, int start, int end) {
     // TODO(lrn): Optimize by copying directly into buffer instead of going
     // through writeCharCode/writeByte. Assumption is the most characters
     // in starings are plain ASCII.
-    for (var i = start; i < end; i++) {
-      var char = string.codeUnitAt(i);
+    for (int i = start; i < end; i++) {
+      int char = string.codeUnitAt(i);
       if (char <= 0x7f) {
         writeByte(char);
       } else {
         if ((char & 0xFC00) == 0xD800 && i + 1 < end) {
           // Lead surrogate.
-          var nextChar = string.codeUnitAt(i + 1);
+          final int nextChar = string.codeUnitAt(i + 1);
           if ((nextChar & 0xFC00) == 0xDC00) {
             // Tail surrogate.
             char = 0x10000 + ((char & 0x3ff) << 10) + (nextChar & 0x3ff);
@@ -743,6 +773,7 @@ class _JsonUtf8Stringifier extends _JsonStringifier {
     }
   }
 
+  @override
   void writeCharCode(int charCode) {
     if (charCode <= 0x7f) {
       writeByte(charCode);
@@ -788,16 +819,18 @@ class _JsonUtf8Stringifier extends _JsonStringifier {
 /// Pretty-printing version of [_JsonUtf8Stringifier].
 class _JsonUtf8StringifierPretty extends _JsonUtf8Stringifier
     with _JsonPrettyPrintMixin {
-  final List<int> indent;
-  _JsonUtf8StringifierPretty(toEncodable(o), this.indent, int bufferSize,
-      void addChunk(Uint8List buffer, int start, int end))
+  _JsonUtf8StringifierPretty(toEncodable(dynamic o), this.indent,
+      int bufferSize, void addChunk(Uint8List buffer, int start, int end))
       : super(toEncodable, bufferSize, addChunk);
 
+  final List<int> indent;
+
+  @override
   void writeIndentation(int count) {
-    var indent = this.indent;
-    var indentLength = indent.length;
+    final List<int> indent = this.indent;
+    final int indentLength = indent.length;
     if (indentLength == 1) {
-      var char = indent[0];
+      final int char = indent[0];
       while (count > 0) {
         writeByte(char);
         count -= 1;
@@ -806,12 +839,12 @@ class _JsonUtf8StringifierPretty extends _JsonUtf8Stringifier
     }
     while (count > 0) {
       count--;
-      var end = index + indentLength;
+      final int end = index + indentLength;
       if (end <= buffer.length) {
         buffer.setRange(index, end, indent);
         index = end;
       } else {
-        for (var i = 0; i < indentLength; i++) {
+        for (int i = 0; i < indentLength; i++) {
           writeByte(indent[i]);
         }
       }
