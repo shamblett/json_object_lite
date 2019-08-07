@@ -209,7 +209,7 @@ void main() {
       expect(convertedBack['name'], equals(person.name));
     });
 
-    test('toString', () {
+    test('toString - typed + Maps', () {
       final dynamic person = JsonObjectLite<dynamic>();
       person.isImmutable = false;
 
@@ -232,6 +232,13 @@ void main() {
       final String json = person.toString();
       expect(json,
           '{"name":"Chris","languages":["Dart","Java"],"address":{"line1":"1 the street","postcode":"AB12 3DE"}}');
+    });
+
+    test('toString - List', () {
+      final dynamic obj = JsonObjectLite<dynamic>();
+      obj.foo = JsonObjectLite<dynamic>.fromJsonString("[1,2,3]");
+      print(obj);
+      expect(obj.toString(), '{"foo":[1,2,3]}');
     });
   });
 
