@@ -1,3 +1,6 @@
+**2.1.0**<br>
+Issue 3
+
 **2.0.0**<br>
 Dart 2.0 updates, issue 2
 
