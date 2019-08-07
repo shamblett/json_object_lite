@@ -236,7 +236,7 @@ void main() {
 
     test('toString - List', () {
       final dynamic obj = JsonObjectLite<dynamic>();
-      obj.foo = JsonObjectLite<dynamic>.fromJsonString("[1,2,3]");
+      obj.foo = JsonObjectLite<dynamic>.fromJsonString('[1,2,3]');
       print(obj);
       expect(obj.toString(), '{"foo":[1,2,3]}');
     });
