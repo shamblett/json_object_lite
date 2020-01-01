@@ -5,26 +5,33 @@
 
 import 'package:json_object_lite/json_object_lite.dart';
 
-/// The Dart 2.0 update has changed how JsonObjectLite is used, previously you could do this :-
+// ignore_for_file: omit_local_variable_types
+// ignore_for_file: unnecessary_final
+// ignore_for_file: cascade_invocations
+// ignore_for_file: avoid_print
+
+/// The Dart 2.0 update has changed how JsonObjectLite is used, previously
+/// you could do this :-
 ///
 /// JsonObjectLite o = new JsonObjectLite.fromJSonString('........');
 /// print(o.bob);
 /// print(o.fred);
 /// ....
 ///
-/// If you do this now the o.bob line will be flagged by the analyser as 'the getter bob is not defined.....'
-/// which is correct, its not. This was suppressed in Dart 1.0 by annotating the class with 'proxy'.
+/// If you do this now the o.bob line will be flagged by the analyser as
+/// 'the getter bob is not defined.....' which is correct, its not.
+/// This was suppressed in Dart 1.0 by annotating the class with 'proxy'.
 /// This annotation has been deprecated in Dart 2.0 hence the error.
 ///
 /// The fix for Dart 2.0 is to do this :-
 /// dynamic o = new JsonObjectLite.fromJSonString('........');
 ///
-/// Declaring the created object as dynamic gives the analyzer no clues about the
-/// objects structure and hence it produces no errors.
+/// Declaring the created object as dynamic gives the analyzer
+/// no clues about the objects structure and hence it produces no errors.
 ///
-/// This is unfortunate in the fact the user code has to change to accommodate this but
-/// in the long run its cleaner as we now know that we don't know the object structure if
-/// you see what I mean.
+/// This is unfortunate in the fact the user code has to change to
+/// accommodate this but in the long run its cleaner as we now know that
+/// we don't know the object structure if you see what I mean.
 ///
 /// An example taken from the dartlang article for JSON object, found here
 /// https://webdev.dartlang.org/articles/get-data/json-web-service.

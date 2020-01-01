@@ -12,9 +12,17 @@
 
 part of json_object_lite;
 
+// ignore_for_file: omit_local_variable_types
+// ignore_for_file: unnecessary_final
+// ignore_for_file: cascade_invocations
+// ignore_for_file: avoid_print
+// ignore_for_file: avoid_annotating_with_dynamic
+// ignore_for_file: prefer_mixin
+
 /// Error thrown by JSON serialization if an object cannot be serialized.
 ///
-/// The [unsupportedObject] field holds that object that failed to be serialized.
+/// The [unsupportedObject] field holds that object that failed
+/// to be serialized.
 ///
 /// If an object isn't directly serializable, the serializer calls the `toJson`
 /// method on the object. If that call fails, the error will be stored in the
@@ -70,15 +78,15 @@ class JsonEncoderLite {
   ///
   /// If [toEncodable] is omitted, it defaults to calling `.toJson()` on
   /// the object.
-  const JsonEncoderLite([toEncodable(dynamic object)])
+  const JsonEncoderLite([Function(dynamic object) toEncodable])
       : indent = null,
         _toEncodable = toEncodable;
 
   /// Creates a JSON encoder that creates multi-line JSON.
   ///
-  /// The encoding of elements of lists and maps are indented and put on separate
-  /// lines. The [indent] string is prepended to these elements, once for each
-  /// level of indentation.
+  /// The encoding of elements of lists and maps are indented and
+  /// put on separate lines. The [indent] string is prepended to these
+  /// elements, once for each level of indentation.
   ///
   /// If [indent] is `null`, the output is encoded as a single line.
   ///
@@ -90,7 +98,8 @@ class JsonEncoderLite {
   ///
   /// If [toEncodable] is omitted, it defaults to calling `.toJson()` on
   /// the object.
-  const JsonEncoderLite.withIndent(this.indent, [toEncodable(dynamic object)])
+  const JsonEncoderLite.withIndent(this.indent,
+      [Function(dynamic object) toEncodable])
       : _toEncodable = toEncodable;
 
   /// The string used for indention.
@@ -113,8 +122,9 @@ class JsonEncoderLite {
   /// serializable.
   ///
   /// If a value of any other type is attempted to be serialized, the
-  /// `toEncodable` function provided in the constructor is called with the value
-  /// as argument. The result, which must be a directly serializable value, is
+  /// `toEncodable` function provided in the constructor is called
+  /// with the value as argument.
+  /// The result, which must be a directly serializable value, is
   /// serialized instead of the original value.
   ///
   /// If the conversion throws, or returns a value that is not directly
@@ -165,7 +175,7 @@ class JsonUtf8Encoder extends Converter<Object, List<int>> {
   /// object.
   JsonUtf8Encoder(
       [String indent,
-      toEncodable(dynamic object),
+      Function(dynamic object) toEncodable,
       int bufferSize = _defaultBufferSize])
       : _indent = _utf8Encode(indent),
         _toEncodable = toEncodable,
@@ -301,7 +311,8 @@ class _JsonUtf8EncoderSink extends ChunkedConversionSink<Object> {
 /// This is an abstract implementation that doesn't decide on the output
 /// format, but writes the JSON through abstract methods like [writeString].
 abstract class _JsonStringifier {
-  _JsonStringifier(toEncodable(dynamic o)) : _toEncodable = toEncodable;
+  _JsonStringifier(Function(dynamic o) toEncodable)
+      : _toEncodable = toEncodable;
 
   // Character code constants.
   static const int backspace = 0x08;
@@ -400,8 +411,9 @@ abstract class _JsonStringifier {
 
   /// Check if an encountered object is already being traversed.
   ///
-  /// Records the object if it isn't already seen. Should have a matching call to
-  /// [_removeSeen] when the object is no longer being traversed.
+  /// Records the object if it isn't already seen. Should have a
+  /// matching call to [_removeSeen] when the object is no longer
+  /// being traversed.
   void _checkCycle(Object object) {
     for (int i = 0; i < _seen.length; i++) {
       if (identical(object, _seen[i])) {
@@ -416,8 +428,9 @@ abstract class _JsonStringifier {
   /// Should be called in the opposite order of the matching [_checkCycle]
   /// calls.
   void _removeSeen(Object object) {
-    assert(_seen.isNotEmpty);
-    assert(identical(_seen.last, object));
+    assert(_seen.isNotEmpty, 'seem must not be empty');
+    assert(identical(_seen.last, object),
+        'seen.last must be identical to the passed in object');
     _seen.removeLast();
   }
 
@@ -562,8 +575,8 @@ abstract class _JsonStringifier {
   }
 }
 
-/// A modification of [_JsonStringifier] which indents the contents of [List] and
-/// [Map] objects using the specified indent value.
+/// A modification of [_JsonStringifier] which indents the
+/// contents of [List] and [Map] objects using the specified indent value.
 ///
 /// Subclasses should implement [writeIndentation].
 abstract class _JsonPrettyPrintMixin implements _JsonStringifier {
@@ -649,7 +662,7 @@ class _JsonStringStringifier extends _JsonStringifier {
   /// for each indentation level. It should only contain valid JSON whitespace
   /// characters (space, tab, carriage return or line feed).
   static String stringify(
-      Object object, toEncodable(dynamic o), String indent) {
+      Object object, Function(dynamic o) toEncodable, String indent) {
     final StringBuffer output = StringBuffer();
     printOn(object, output, toEncodable, indent);
     return output.toString();
@@ -658,8 +671,8 @@ class _JsonStringStringifier extends _JsonStringifier {
   /// Convert object to a string, and write the result to the [output] sink.
   ///
   /// The result is written piecemally to the sink.
-  static void printOn(
-      Object object, StringSink output, toEncodable(dynamic o), String indent) {
+  static void printOn(Object object, StringSink output,
+      Function(dynamic o) toEncodable, String indent) {
     _JsonStringifier stringifier;
     if (indent == null) {
       stringifier = _JsonStringStringifier(output, toEncodable);
@@ -696,7 +709,7 @@ class _JsonStringStringifier extends _JsonStringifier {
 class _JsonStringStringifierPretty extends _JsonStringStringifier
     with _JsonPrettyPrintMixin {
   _JsonStringStringifierPretty(
-      StringSink sink, toEncodable(dynamic o), this._indent)
+      StringSink sink, Function(dynamic o) toEncodable, this._indent)
       : super(sink, toEncodable);
 
   final String _indent;
@@ -714,7 +727,8 @@ class _JsonStringStringifierPretty extends _JsonStringStringifier
 /// The JSON text is UTF-8 encoded and written to [Uint8List] buffers.
 /// The buffers are then passed back to a user provided callback method.
 class _JsonUtf8Stringifier extends _JsonStringifier {
-  _JsonUtf8Stringifier(toEncodable(dynamic o), this.bufferSize, this.addChunk)
+  _JsonUtf8Stringifier(
+      Function(dynamic o) toEncodable, this.bufferSize, this.addChunk)
       : buffer = Uint8List(bufferSize),
         super(toEncodable);
 
@@ -732,8 +746,12 @@ class _JsonUtf8Stringifier extends _JsonStringifier {
   ///
   /// If [indent] is non-`null`, the result will be "pretty-printed" with extra
   /// newlines and indentation, using [indent] as the indentation.
-  static void stringify(Object object, List<int> indent, toEncodable(dynamic o),
-      int bufferSize, void addChunk(Uint8List chunk, int start, int end)) {
+  static void stringify(
+      Object object,
+      List<int> indent,
+      Function(dynamic o) toEncodable,
+      int bufferSize,
+      void Function(Uint8List chunk, int start, int end) addChunk) {
     _JsonUtf8Stringifier stringifier;
     if (indent != null) {
       stringifier =
@@ -767,7 +785,7 @@ class _JsonUtf8Stringifier extends _JsonStringifier {
   void writeAsciiString(String string) {
     for (int i = 0; i < string.length; i++) {
       final int char = string.codeUnitAt(i);
-      assert(char <= 0x7f);
+      assert(char <= 0x7f, 'char must be <= 0x7f');
       writeByte(char);
     }
   }
@@ -825,7 +843,7 @@ class _JsonUtf8Stringifier extends _JsonStringifier {
   }
 
   void writeFourByteCharCode(int charCode) {
-    assert(charCode <= 0x10ffff);
+    assert(charCode <= 0x10ffff, 'char code must be <= 0x10ffff');
     writeByte(0xF0 | (charCode >> 18));
     writeByte(0x80 | ((charCode >> 12) & 0x3f));
     writeByte(0x80 | ((charCode >> 6) & 0x3f));
@@ -833,7 +851,7 @@ class _JsonUtf8Stringifier extends _JsonStringifier {
   }
 
   void writeByte(int byte) {
-    assert(byte <= 0xff);
+    assert(byte <= 0xff, 'byte must be <= 0xff');
     if (index == buffer.length) {
       addChunk(buffer, 0, index);
       buffer = Uint8List(bufferSize);
@@ -845,9 +863,14 @@ class _JsonUtf8Stringifier extends _JsonStringifier {
 
 /// Pretty-printing version of [_JsonUtf8Stringifier].
 class _JsonUtf8StringifierPretty extends _JsonUtf8Stringifier
-    with _JsonPrettyPrintMixin {
-  _JsonUtf8StringifierPretty(toEncodable(dynamic o), this.indent,
-      int bufferSize, void addChunk(Uint8List buffer, int start, int end))
+    // ignore: prefer_mixin
+    with
+        _JsonPrettyPrintMixin {
+  _JsonUtf8StringifierPretty(
+      Function(dynamic o) toEncodable,
+      this.indent,
+      int bufferSize,
+      void Function(Uint8List buffer, int start, int end) addChunk)
       : super(toEncodable, bufferSize, addChunk);
 
   final List<int> indent;

@@ -9,6 +9,13 @@ import 'dart:convert';
 import 'package:json_object_lite/json_object_lite.dart';
 import 'package:test/test.dart';
 
+// ignore_for_file: omit_local_variable_types
+// ignore_for_file: unnecessary_final
+// ignore_for_file: cascade_invocations
+// ignore_for_file: avoid_print
+// ignore_for_file: avoid_annotating_with_dynamic
+// ignore_for_file: lines_longer_than_80_chars
+
 class Person extends JsonObjectLite<dynamic> {
   Person() : super();
 
@@ -133,6 +140,7 @@ void main() {
       bool thrown = false;
       try {
         expect(throwsNoSuchMethodError, person.name);
+        // ignore: avoid_catching_errors
       } on NoSuchMethodError {
         thrown = true;
       }
@@ -182,7 +190,7 @@ void main() {
 
       // Dynamically create some properties
       person.name = 'Chris';
-      person.languages = List<String>();
+      person.languages = <String>[];
       person.languages.add('Dart');
       person.languages.add('Java');
 
@@ -215,7 +223,7 @@ void main() {
 
       // Dynamically create some properties
       person.name = 'Chris';
-      person.languages = List<String>();
+      person.languages = <String>[];
       person.languages.add('Dart');
       person.languages.add('Java');
 
@@ -262,7 +270,7 @@ void main() {
       String firstTitle = '';
       String secondTitle = '';
 
-      for (dynamic item in jsonObject.toIterable()) {
+      for (final dynamic item in jsonObject.toIterable()) {
         if (firstTitle == '') {
           firstTitle = item.Obj.Title;
         } else {
@@ -453,6 +461,7 @@ void main() {
       bool thrown = false;
       try {
         print(o.address);
+        // ignore: avoid_catching_errors
       } on NoSuchMethodError {
         thrown = true;
       }

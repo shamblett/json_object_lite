@@ -1,7 +1,6 @@
 name: json_object_lite
 description: Allow use of JSON Maps in dot notation format without using mirrors.
-version: 2.1.0
-author: Steve Hamblett <steve.hamblett@linux.com>
+version: 2.1.1
 homepage: https://github.com/shamblett/json_object_lite
 
 environment:

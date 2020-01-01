@@ -10,6 +10,12 @@
 // ignore_for_file: public_member_api_docs
 part of json_object_lite;
 
+// ignore_for_file: omit_local_variable_types
+// ignore_for_file: unnecessary_final
+// ignore_for_file: cascade_invocations
+// ignore_for_file: avoid_print
+// ignore_for_file: avoid_annotating_with_dynamic
+
 /// Set to true to as required
 bool enableJsonObjectLiteDebugMessages = false;
 
@@ -27,17 +33,19 @@ class JsonObjectLite<E> implements Map<dynamic, dynamic> {
   /// Default constructor.
   /// Creates a new empty map.
   JsonObjectLite() {
-    _objectData = Map<dynamic, dynamic>();
+    _objectData = <dynamic, dynamic>{};
     isImmutable = false;
   }
 
   /// Eager constructor parses [jsonString] using [JsonDecoder].
   ///
-  /// If [t] is given, will replace [t]'s contents from the string and return [t].
+  /// If [t] is given, will replace [t]'s contents from the
+  /// string and return [t].
   ///
   /// If [recursive] is true, replaces all maps recursively with JsonObjects.
   /// The default value is true.
-  /// The object is set to immutable, the user must reset this to add more properties.
+  /// The object is set to immutable, the user must reset this
+  /// to add more properties.
   factory JsonObjectLite.fromJsonString(String jsonString,
       [JsonObjectLite<dynamic> t, bool recursive = true]) {
     t ??= JsonObjectLite<dynamic>();
@@ -50,7 +58,8 @@ class JsonObjectLite<E> implements Map<dynamic, dynamic> {
   }
 
   /// Private fromMap constructor.
-  /// The object is set to immutable, the user must reset this to add more properties.
+  /// The object is set to immutable, the user must reset this
+  /// to add more properties.
   factory JsonObjectLite._fromMap(Map<dynamic, dynamic> map,
       [JsonObjectLite<dynamic> t, bool recursive = true]) {
     t ??= JsonObjectLite<dynamic>();
@@ -91,8 +100,8 @@ class JsonObjectLite<E> implements Map<dynamic, dynamic> {
   /// If set to false, then calling o.blah="123" will create a new blah property
   /// if it didn't already exist.
   ///
-  /// Set to true by default when a JsonObjectLite is created with [JsonObjectLite.fromJsonString()]
-  /// or [JsonObjectLite.fromMap()].
+  /// Set to true by default when a JsonObjectLite is created
+  /// with [JsonObjectLite.fromJsonString()] or [JsonObjectLite.fromMap()].
   /// The default constructor [JsonObjectLite()], sets this value to
   /// false so properties can be added.
   bool isImmutable;
@@ -157,14 +166,14 @@ class JsonObjectLite<E> implements Map<dynamic, dynamic> {
 
   /// If the object passed in is a MAP, then we iterate through each of
   /// the values of the map, and if any value is a map, then we create a new
-  /// [JsonObjectLite] replacing that map in the original data with that [JsonObjectLite]
-  /// to a new [JsonObjectLite].  If the value is a Collection, then we call this
-  /// function recursively.
+  /// [JsonObjectLite] replacing that map in the original data with
+  /// that [JsonObjectLite] to a new [JsonObjectLite].
+  /// If the value is a Collection, then we call this function recursively.
   ///
   /// If the object passed in is a Collection, then we iterate through
   /// each item.  If that item is a map, then we replace the item with a
-  /// [JsonObjectLite] created from the map.  If the item is a Collection, then we
-  /// call this function recursively.
+  /// [JsonObjectLite] created from the map.  If the item is a
+  /// Collection, then we call this function recursively.
   ///
   void _extractElements(dynamic data) {
     if (data is Map) {
@@ -196,7 +205,8 @@ class JsonObjectLite<E> implements Map<dynamic, dynamic> {
     }
   }
 
-  /// Convert the incoming method name(symbol) into a string, without using mirrors.
+  /// Convert the incoming method name(symbol) into a string,
+  /// without using mirrors.
   String _symbolToString(dynamic value, [bool isSetter = false]) {
     String ret;
     if (value is Symbol) {
@@ -218,31 +228,32 @@ class JsonObjectLite<E> implements Map<dynamic, dynamic> {
   /// Iterable implementation methods and properties
   ///
 
-  bool any(bool f(dynamic element)) => toIterable().any(f);
+  bool any(bool Function(dynamic element) f) => toIterable().any(f);
 
   bool contains(dynamic element) => toIterable().contains(element);
 
   E elementAt(int index) => toIterable().elementAt(index);
 
-  bool every(bool f(dynamic element)) => toIterable().every(f);
+  bool every(bool Function(dynamic element) f) => toIterable().every(f);
 
-  Iterable<T> expand<T>(dynamic f(dynamic element)) => toIterable().expand(f);
+  Iterable<T> expand<T>(dynamic Function(dynamic element) f) =>
+      toIterable().expand(f);
 
-  dynamic firstWhere(bool test(dynamic value), {dynamic orElse}) =>
+  dynamic firstWhere(bool Function(dynamic value) test, {dynamic orElse}) =>
       toIterable().firstWhere(test, orElse: orElse);
 
-  T fold<T>(T initialValue, T combine(T a, dynamic b)) =>
+  T fold<T>(T initialValue, T Function(T a, dynamic b) combine) =>
       toIterable().fold(initialValue, combine);
 
   String join([String separator = '']) => toIterable().join(separator);
 
-  dynamic lastWhere(bool test(dynamic value), {dynamic orElse}) =>
+  dynamic lastWhere(bool Function(dynamic value) test, {dynamic orElse}) =>
       toIterable().firstWhere(test, orElse: orElse);
 
-  dynamic reduce(dynamic combine(dynamic value, dynamic element)) =>
+  dynamic reduce(dynamic Function(dynamic value, dynamic element) combine) =>
       toIterable().reduce(combine);
 
-  dynamic singleWhere(bool test(dynamic value), {dynamic orElse}) =>
+  dynamic singleWhere(bool Function(dynamic value) test, {dynamic orElse}) =>
       toIterable().firstWhere(test, orElse: orElse);
 
   Iterable<E> skip(int n) => toIterable().skip(n);
@@ -254,7 +265,7 @@ class JsonObjectLite<E> implements Map<dynamic, dynamic> {
 
   Set<dynamic> toSet() => toIterable().toSet();
 
-  Iterable<E> where(bool f(dynamic element)) => toIterable().where(f);
+  Iterable<E> where(bool Function(dynamic element) f) => toIterable().where(f);
 
   E get first => toIterable().first;
 
@@ -287,7 +298,7 @@ class JsonObjectLite<E> implements Map<dynamic, dynamic> {
 
   // Pass through to the inner _objectData map.
   @override
-  void forEach(void func(dynamic key, dynamic value)) {
+  void forEach(void Function(dynamic key, dynamic value) func) {
     _objectData.forEach(func);
   }
 
@@ -323,7 +334,7 @@ class JsonObjectLite<E> implements Map<dynamic, dynamic> {
     // If the map is not immutable, or it already contains the key, then
     if (isImmutable == false || containsKey(key)) {
       //allow the edit, as we don't care if it's a new key or not
-      return _objectData[key] = value;
+      _objectData[key] = value;
     } else {
       throw const JsonObjectLiteException('JsonObject is not extendable');
     }
@@ -334,9 +345,9 @@ class JsonObjectLite<E> implements Map<dynamic, dynamic> {
   /// Throw [JsonObjectLiteException] if we're not allowed to add a new
   /// key
   @override
-  void putIfAbsent(dynamic key, ifAbsent()) {
+  void putIfAbsent(dynamic key, Function() ifAbsent) {
     if (isImmutable == false || containsKey(key)) {
-      return _objectData.putIfAbsent(key, ifAbsent);
+      _objectData.putIfAbsent(key, ifAbsent);
     } else {
       throw const JsonObjectLiteException('JsonObject is not extendable');
     }

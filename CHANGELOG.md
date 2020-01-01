@@ -1,3 +1,6 @@
+**2.1.1**<br>
+Linter updates
+
 **2.1.0**<br>
 Issue 3
 
