@@ -134,9 +134,7 @@ class JsonObjectLite<E> implements Map<dynamic, dynamic> {
   @override
   dynamic noSuchMethod(Invocation mirror) {
     int positionalArgs = 0;
-    if (mirror.positionalArguments != null) {
-      positionalArgs = mirror.positionalArguments.length;
-    }
+    positionalArgs = mirror.positionalArguments.length;
     String property = 'Not Found';
 
     if (mirror.isGetter && (positionalArgs == 0)) {
@@ -265,7 +263,8 @@ class JsonObjectLite<E> implements Map<dynamic, dynamic> {
 
   Set<dynamic> toSet() => toIterable()!.toSet();
 
-  Iterable<E> where(bool Function(dynamic element) f) => toIterable()!.where(f) as Iterable<E>;
+  Iterable<E> where(bool Function(dynamic element) f) =>
+      toIterable()!.where(f) as Iterable<E>;
 
   E get first => toIterable()!.first;
 

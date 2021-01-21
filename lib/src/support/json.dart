@@ -548,7 +548,8 @@ abstract class _JsonStringifier {
       writeString('{}');
       return true;
     }
-    final List<dynamic> keyValueList = List<dynamic>(map.length * 2);
+    final List<dynamic> keyValueList =
+        List<dynamic>.filled(map.length * 2, dynamic);
     int i = 0;
     bool allStringKeys = true;
     map.forEach((dynamic key, dynamic value) {
@@ -612,7 +613,8 @@ abstract class _JsonPrettyPrintMixin implements _JsonStringifier {
       writeString('{}');
       return true;
     }
-    final List<dynamic> keyValueList = List<dynamic>(map.length * 2);
+    final List<dynamic> keyValueList =
+        List<dynamic>.filled(map.length * 2, dynamic);
     int i = 0;
     bool allStringKeys = true;
     map.forEach((dynamic key, dynamic value) {
@@ -733,7 +735,7 @@ class _JsonUtf8Stringifier extends _JsonStringifier {
         super(toEncodable);
 
   final int bufferSize;
-  final void Function(Uint8List? list, int start, int end) addChunk;
+  final void Function(Uint8List list, int start, int end) addChunk;
   Uint8List? buffer;
   int index = 0;
 
@@ -767,7 +769,7 @@ class _JsonUtf8Stringifier extends _JsonStringifier {
   /// callback.
   void flush() {
     if (index > 0) {
-      addChunk(buffer, 0, index);
+      addChunk(buffer!, 0, index);
     }
     buffer = null;
     index = 0;
@@ -853,7 +855,7 @@ class _JsonUtf8Stringifier extends _JsonStringifier {
   void writeByte(int byte) {
     assert(byte <= 0xff, 'byte must be <= 0xff');
     if (index == buffer!.length) {
-      addChunk(buffer, 0, index);
+      addChunk(buffer!, 0, index);
       buffer = Uint8List(bufferSize);
       index = 0;
     }
@@ -863,7 +865,6 @@ class _JsonUtf8Stringifier extends _JsonStringifier {
 
 /// Pretty-printing version of [_JsonUtf8Stringifier].
 class _JsonUtf8StringifierPretty extends _JsonUtf8Stringifier
-    // ignore: prefer_mixin
     with
         _JsonPrettyPrintMixin {
   _JsonUtf8StringifierPretty(
