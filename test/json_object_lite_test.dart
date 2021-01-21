@@ -20,23 +20,23 @@ class Person extends JsonObjectLite<dynamic> {
   Person() : super();
 
   factory Person.fromString(String jsonString) =>
-      JsonObjectLite<dynamic>.fromJsonString(jsonString, Person());
+      JsonObjectLite<dynamic>.fromJsonString(jsonString, Person()) as Person;
 }
 
 abstract class Address extends JsonObjectLite<dynamic> {
-  String line1;
-  String postcode;
+  String? line1;
+  String? postcode;
 }
 
 abstract class AddressList extends JsonObjectLite<dynamic> {
-  Address address;
+  Address? address;
 }
 
 class MyList extends JsonObjectLite<dynamic> {
   MyList();
 
   factory MyList.fromString(String jsonString) =>
-      JsonObjectLite<dynamic>.fromJsonString(jsonString, MyList());
+      JsonObjectLite<dynamic>.fromJsonString(jsonString, MyList()) as MyList;
 }
 
 void main() {
@@ -115,7 +115,7 @@ void main() {
 
       final dynamic o = JsonObjectLite<dynamic>.fromJsonString(jsonString);
       expect(o.isImmutable, true);
-      final List<dynamic> theList = o.toList();
+      final List<dynamic>? theList = o.toList();
       expect(theList.toString(),
           '[1, 2, 3, 4, 5, one, two, three, four, five, [6, 7, [8, 9]]]');
     });
@@ -267,10 +267,10 @@ void main() {
       ''';
       final MyList jsonObject = MyList.fromString(testJson);
 
-      String firstTitle = '';
-      String secondTitle = '';
+      String? firstTitle = '';
+      String? secondTitle = '';
 
-      for (final dynamic item in jsonObject.toIterable()) {
+      for (final dynamic item in jsonObject.toIterable()!) {
         if (firstTitle == '') {
           firstTitle = item.Obj.Title;
         } else {

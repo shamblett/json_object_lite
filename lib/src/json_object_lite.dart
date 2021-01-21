@@ -47,35 +47,35 @@ class JsonObjectLite<E> implements Map<dynamic, dynamic> {
   /// The object is set to immutable, the user must reset this
   /// to add more properties.
   factory JsonObjectLite.fromJsonString(String jsonString,
-      [JsonObjectLite<dynamic> t, bool recursive = true]) {
+      [JsonObjectLite<dynamic>? t, bool recursive = true]) {
     t ??= JsonObjectLite<dynamic>();
     t._objectData = decoder.convert(jsonString);
     if (recursive) {
       t._extractElements(t._objectData);
     }
     t.isImmutable = true;
-    return t;
+    return t as JsonObjectLite<E>;
   }
 
   /// Private fromMap constructor.
   /// The object is set to immutable, the user must reset this
   /// to add more properties.
   factory JsonObjectLite._fromMap(Map<dynamic, dynamic> map,
-      [JsonObjectLite<dynamic> t, bool recursive = true]) {
+      [JsonObjectLite<dynamic>? t, bool recursive = true]) {
     t ??= JsonObjectLite<dynamic>();
     t._objectData = map;
     if (recursive) {
       t._extractElements(t._objectData);
     }
     t.isImmutable = true;
-    return t;
+    return t as JsonObjectLite<E>;
   }
 
   /// Typed JsonObjectLite
   static JsonObjectLite<dynamic> toTypedJsonObjectLite(
       JsonObjectLite<dynamic> src, JsonObjectLite<dynamic> dest) {
     dest._objectData = src._objectData;
-    if (src.isImmutable) {
+    if (src.isImmutable!) {
       dest.isImmutable = true;
     }
     return dest;
@@ -104,7 +104,7 @@ class JsonObjectLite<E> implements Map<dynamic, dynamic> {
   /// with [JsonObjectLite.fromJsonString()] or [JsonObjectLite.fromMap()].
   /// The default constructor [JsonObjectLite()], sets this value to
   /// false so properties can be added.
-  bool isImmutable;
+  bool? isImmutable;
 
   /// Returns a string representation of the underlying object data
   @override
@@ -113,7 +113,7 @@ class JsonObjectLite<E> implements Map<dynamic, dynamic> {
   /// Returns either the underlying parsed data as an iterable list (if the
   /// underlying data contains a list), or returns the map.values (if the
   /// underlying data contains a map).
-  Iterable<dynamic> toIterable() {
+  Iterable<dynamic>? toIterable() {
     if (_objectData is Iterable) {
       return _objectData;
     }
@@ -150,7 +150,7 @@ class JsonObjectLite<E> implements Map<dynamic, dynamic> {
       // If the property doesn't exist, it will only be added
       // if isImmutable = false
       property = _symbolToString(mirror.memberName, true);
-      if (!isImmutable) {
+      if (!isImmutable!) {
         this[property] = mirror.positionalArguments[0];
       }
       return this[property];
@@ -228,52 +228,52 @@ class JsonObjectLite<E> implements Map<dynamic, dynamic> {
   /// Iterable implementation methods and properties
   ///
 
-  bool any(bool Function(dynamic element) f) => toIterable().any(f);
+  bool any(bool Function(dynamic element) f) => toIterable()!.any(f);
 
-  bool contains(dynamic element) => toIterable().contains(element);
+  bool contains(dynamic element) => toIterable()!.contains(element);
 
-  E elementAt(int index) => toIterable().elementAt(index);
+  E elementAt(int index) => toIterable()!.elementAt(index);
 
-  bool every(bool Function(dynamic element) f) => toIterable().every(f);
+  bool every(bool Function(dynamic element) f) => toIterable()!.every(f);
 
   Iterable<T> expand<T>(dynamic Function(dynamic element) f) =>
-      toIterable().expand(f);
+      toIterable()!.expand(f as Iterable<T> Function(dynamic));
 
   dynamic firstWhere(bool Function(dynamic value) test, {dynamic orElse}) =>
-      toIterable().firstWhere(test, orElse: orElse);
+      toIterable()!.firstWhere(test, orElse: orElse);
 
   T fold<T>(T initialValue, T Function(T a, dynamic b) combine) =>
-      toIterable().fold(initialValue, combine);
+      toIterable()!.fold(initialValue, combine);
 
-  String join([String separator = '']) => toIterable().join(separator);
+  String join([String separator = '']) => toIterable()!.join(separator);
 
   dynamic lastWhere(bool Function(dynamic value) test, {dynamic orElse}) =>
-      toIterable().firstWhere(test, orElse: orElse);
+      toIterable()!.firstWhere(test, orElse: orElse);
 
   dynamic reduce(dynamic Function(dynamic value, dynamic element) combine) =>
-      toIterable().reduce(combine);
+      toIterable()!.reduce(combine);
 
   dynamic singleWhere(bool Function(dynamic value) test, {dynamic orElse}) =>
-      toIterable().firstWhere(test, orElse: orElse);
+      toIterable()!.firstWhere(test, orElse: orElse);
 
-  Iterable<E> skip(int n) => toIterable().skip(n);
+  Iterable<E> skip(int n) => toIterable()!.skip(n) as Iterable<E>;
 
-  Iterable<E> take(int n) => toIterable().take(n);
+  Iterable<E> take(int n) => toIterable()!.take(n) as Iterable<E>;
 
   List<dynamic> toList({bool growable = true}) =>
-      toIterable().toList(growable: growable);
+      toIterable()!.toList(growable: growable);
 
-  Set<dynamic> toSet() => toIterable().toSet();
+  Set<dynamic> toSet() => toIterable()!.toSet();
 
-  Iterable<E> where(bool Function(dynamic element) f) => toIterable().where(f);
+  Iterable<E> where(bool Function(dynamic element) f) => toIterable()!.where(f) as Iterable<E>;
 
-  E get first => toIterable().first;
+  E get first => toIterable()!.first;
 
-  Iterator<E> get iterator => toIterable().iterator;
+  Iterator<E> get iterator => toIterable()!.iterator as Iterator<E>;
 
-  E get last => toIterable().last;
+  E get last => toIterable()!.last;
 
-  E get single => toIterable().single;
+  E get single => toIterable()!.single;
 
   ///
   /// Map implementation methods and properties *
@@ -380,10 +380,10 @@ class JsonObjectLite<E> implements Map<dynamic, dynamic> {
 
 /// Exception class thrown by JsonObjectLite
 class JsonObjectLiteException implements Exception {
-  const JsonObjectLiteException([String message]) : _message = message;
+  const JsonObjectLiteException([String? message]) : _message = message;
   @override
   String toString() => _message != null
       ? 'JsonObjectException: $_message'
       : 'JsonObjectException';
-  final String _message;
+  final String? _message;
 }

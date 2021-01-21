@@ -47,18 +47,18 @@ class LanguageWebsite extends JsonObjectLite<dynamic> {
     // injecting the _LanguageWebsite instance.
     final JsonObjectLite<dynamic> jsonObject =
         JsonObjectLite<dynamic>.fromJsonString(json, languageWebsite);
-    return jsonObject; // return the populated JsonObject instance
+    return jsonObject as LanguageWebsite; // return the populated JsonObject instance
   }
 
   factory LanguageWebsite.fromJsonObject(JsonObjectLite<dynamic> jsonObject) =>
-      JsonObjectLite.toTypedJsonObjectLite(jsonObject, LanguageWebsite());
+      JsonObjectLite.toTypedJsonObjectLite(jsonObject, LanguageWebsite()) as LanguageWebsite;
 }
 
 class Language extends JsonObjectLite<dynamic> {
   Language(); // empty, default constructor
 
   factory Language.fromJsonString(String json) =>
-      JsonObjectLite<dynamic>.fromJsonString(json, Language());
+      JsonObjectLite<dynamic>.fromJsonString(json, Language()) as Language;
   // as _LangaugeWebsite, return an instance
   // of JsonObjectLite, containing the json string and
   // injecting a _Language instance
