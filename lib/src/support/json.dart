@@ -865,8 +865,7 @@ class _JsonUtf8Stringifier extends _JsonStringifier {
 
 /// Pretty-printing version of [_JsonUtf8Stringifier].
 class _JsonUtf8StringifierPretty extends _JsonUtf8Stringifier
-    with
-        _JsonPrettyPrintMixin {
+    with _JsonPrettyPrintMixin {
   _JsonUtf8StringifierPretty(
       Function(dynamic o)? toEncodable,
       this.indent,
