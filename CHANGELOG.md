@@ -1,3 +1,6 @@
+**3.0.0**<br>
+Issue 4(NNBD)
+
 **2.1.1**<br>
 Linter updates
 
