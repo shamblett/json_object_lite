@@ -649,8 +649,8 @@ abstract class _JsonPrettyPrintMixin implements _JsonStringifier {
 
 /// A specialization of [_JsonStringifier] that writes its JSON to a string.
 class _JsonStringStringifier extends _JsonStringifier {
-  _JsonStringStringifier(this._sink, dynamic Function(dynamic)? _toEncodable)
-      : super(_toEncodable);
+  _JsonStringStringifier(this._sink, dynamic Function(dynamic)? toEncodable)
+      : super(toEncodable);
 
   final StringSink _sink;
 

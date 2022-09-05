@@ -1,6 +1,5 @@
 # json_object_lite
-[![Build Status](https://travis-ci.org/shamblett/json_object_lite.svg?branch=master)](https://travis-ci.org/shamblett/joson_object_lite)
-
+[![Build Status](https://github.com/shamblett/json_object_lite/actions/workflows/ci.yml/badge.svg)](https://github.com/shamblett/json_object_lite/actions/workflows/ci.yml)
 json_object_lite allows dot notation access to JSON.parse'd objects, for Dart, lite version.
 
 This package is a re-implementation of the [json_object](https://pub.dartlang.org/packages/json_object) package by Chris Buckett 
