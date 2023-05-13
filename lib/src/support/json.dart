@@ -263,14 +263,10 @@ class JsonUtf8Encoder extends Converter<Object, List<int>?> {
     }
     return _JsonUtf8EncoderSink(byteSink, _toEncodable, _indent, _bufferSize);
   }
-
-  // Override the base class's bind, to provide a better type.
-  @override
-  Stream<List<int>?> bind(Stream<Object> stream) => super.bind(stream);
 }
 
 /// Sink returned when starting a chunked conversion from object to bytes.
-class _JsonUtf8EncoderSink extends ChunkedConversionSink<Object> {
+class _JsonUtf8EncoderSink implements ChunkedConversionSink<Object> {
   _JsonUtf8EncoderSink(
       this._sink, this._toEncodable, this._indent, this._bufferSize);
 
@@ -580,7 +576,7 @@ abstract class _JsonStringifier {
 /// contents of [List] and [Map] objects using the specified indent value.
 ///
 /// Subclasses should implement [writeIndentation].
-abstract class _JsonPrettyPrintMixin implements _JsonStringifier {
+mixin _JsonPrettyPrintMixin implements _JsonStringifier {
   int _indentLevel = 0;
 
   /// Add [indentLevel] indentations to the JSON output.

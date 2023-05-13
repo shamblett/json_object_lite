@@ -8,7 +8,6 @@
 
 library json_object_lite;
 
-import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
