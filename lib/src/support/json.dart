@@ -10,7 +10,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-part of json_object_lite;
+part of '../../json_object_lite.dart';
 
 // ignore_for_file: omit_local_variable_types
 // ignore_for_file: unnecessary_final
@@ -61,7 +61,7 @@ class JsonUnsupportedObjectError extends Error {
 /// When the cycle is detected, a [JsonCyclicError] is thrown.
 class JsonCyclicError extends JsonUnsupportedObjectError {
   /// The first object that was detected as part of a cycle.
-  JsonCyclicError(Object? object) : super(object);
+  JsonCyclicError(super.object);
   @override
   String toString() => 'Cyclic error in JSON stringify';
 }
@@ -706,9 +706,7 @@ class _JsonStringStringifier extends _JsonStringifier {
 
 class _JsonStringStringifierPretty extends _JsonStringStringifier
     with _JsonPrettyPrintMixin {
-  _JsonStringStringifierPretty(
-      StringSink sink, Function(dynamic o)? toEncodable, this._indent)
-      : super(sink, toEncodable);
+  _JsonStringStringifierPretty(super.sink, super.toEncodable, this._indent);
 
   final String _indent;
 
@@ -725,10 +723,8 @@ class _JsonStringStringifierPretty extends _JsonStringStringifier
 /// The JSON text is UTF-8 encoded and written to [Uint8List] buffers.
 /// The buffers are then passed back to a user provided callback method.
 class _JsonUtf8Stringifier extends _JsonStringifier {
-  _JsonUtf8Stringifier(
-      Function(dynamic o)? toEncodable, this.bufferSize, this.addChunk)
-      : buffer = Uint8List(bufferSize),
-        super(toEncodable);
+  _JsonUtf8Stringifier(super.toEncodable, this.bufferSize, this.addChunk)
+      : buffer = Uint8List(bufferSize);
 
   final int bufferSize;
   final void Function(Uint8List list, int start, int end) addChunk;

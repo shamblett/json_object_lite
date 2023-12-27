@@ -1,7 +1,7 @@
-///
-/// This example is taken from the following article :-
-/// http://www.dartlang.org/articles/json-web-service/
-///
+//
+// This example is taken from the following article :-
+// http://www.dartlang.org/articles/json-web-service/
+//
 
 import 'package:json_object_lite/json_object_lite.dart';
 
