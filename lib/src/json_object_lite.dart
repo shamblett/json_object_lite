@@ -8,7 +8,7 @@
 
 // ignore_for_file: avoid_positional_boolean_parameters
 // ignore_for_file: public_member_api_docs
-part of json_object_lite;
+part of '../json_object_lite.dart';
 
 // ignore_for_file: omit_local_variable_types
 // ignore_for_file: unnecessary_final
