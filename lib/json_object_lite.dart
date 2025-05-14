@@ -11,5 +11,7 @@ library;
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:characters/characters.dart';
+
 part 'src/json_object_lite.dart';
 part 'src/support/json.dart';
