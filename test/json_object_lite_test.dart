@@ -116,18 +116,23 @@ void main() {
       final dynamic o = JsonObjectLite<dynamic>.fromJsonString(jsonString);
       expect(o.isImmutable, true);
       final List<dynamic>? theList = o.toList();
-      expect(theList.toString(),
-          '[1, 2, 3, 4, 5, one, two, three, four, five, [6, 7, [8, 9]]]');
+      expect(
+        theList.toString(),
+        '[1, 2, 3, 4, 5, one, two, three, four, five, [6, 7, [8, 9]]]',
+      );
     });
   });
 
   group('Typing', () {
     test('Typed Object', () {
       final JsonObjectLite<dynamic> o = JsonObjectLite<dynamic>.fromJsonString(
-          '{"Name": "Fred", "Sex": "male", "Age": 40}');
+        '{"Name": "Fred", "Sex": "male", "Age": 40}',
+      );
       expect(o.isImmutable, true);
-      final dynamic dest =
-          JsonObjectLite.toTypedJsonObjectLite(o, JsonObjectLite<dynamic>());
+      final dynamic dest = JsonObjectLite.toTypedJsonObjectLite(
+        o,
+        JsonObjectLite<dynamic>(),
+      );
       expect(dest.Name, 'Fred');
       expect(dest.Sex, 'male');
       expect(dest.Age, 40);
@@ -205,12 +210,15 @@ void main() {
 
       // convert to a json string:
       final String json = const JsonEncoder().convert(person);
-      expect(json,
-          '{"name":"Chris","languages":["Dart","Java"],"address":{"line1":"1 the street","postcode":"AB12 3DE"}}');
+      expect(
+        json,
+        '{"name":"Chris","languages":["Dart","Java"],"address":{"line1":"1 the street","postcode":"AB12 3DE"}}',
+      );
 
       // convert back to a map
-      final Map<dynamic, dynamic> convertedBack =
-          const JsonDecoder(null).convert(json);
+      final Map<dynamic, dynamic> convertedBack = const JsonDecoder(
+        null,
+      ).convert(json);
 
       // test
       expect(convertedBack['address']['line1'], equals(address.line1));
@@ -238,8 +246,10 @@ void main() {
 
       // convert to a json string using toString()
       final String json = person.toString();
-      expect(json,
-          '{"name":"Chris","languages":["Dart","Java"],"address":{"line1":"1 the street","postcode":"AB12 3DE"}}');
+      expect(
+        json,
+        '{"name":"Chris","languages":["Dart","Java"],"address":{"line1":"1 the street","postcode":"AB12 3DE"}}',
+      );
     });
 
     test('toString - List', () {
@@ -298,7 +308,7 @@ void main() {
         'Steve',
         55,
         'male',
-        <String>['dart', 'c', 'c++']
+        <String>['dart', 'c', 'c++'],
       ]);
       expect(o.firstWhere((dynamic element) => element == 'male'), o.sex);
       o.sex2 = 'male';
@@ -310,9 +320,13 @@ void main() {
       folder.nsecond = 2;
       folder.nthird = 3;
       expect(
-          folder.fold(0, (dynamic prev, dynamic element) => prev + element), 6);
-      expect(folder.reduce((dynamic value, dynamic element) => value + element),
-          6);
+        folder.fold(0, (dynamic prev, dynamic element) => prev + element),
+        6,
+      );
+      expect(
+        folder.reduce((dynamic value, dynamic element) => value + element),
+        6,
+      );
       expect(folder.join('-'), '1-2-3');
       expect(folder.skip(2).length, 1);
       expect(folder.take(2).length, 2);
@@ -321,13 +335,13 @@ void main() {
         55,
         'male',
         <String>['dart', 'c', 'c++'],
-        'male'
+        'male',
       ]);
       expect(o.toSet(), <dynamic>[
         'Steve',
         55,
         'male',
-        <String>['dart', 'c', 'c++']
+        <String>['dart', 'c', 'c++'],
       ]);
       expect(folder.where((dynamic element) => element == 55), <dynamic>[]);
       expect(folder.first, 1);
@@ -363,12 +377,12 @@ void main() {
         'Steve',
         55,
         'male',
-        <String>['dart', 'c', 'c++']
+        <String>['dart', 'c', 'c++'],
       ]);
       expect(o.length, 4);
       final Map<String, String> items = <String, String>{
         'pets': 'none',
-        'colour': 'white'
+        'colour': 'white',
       };
       o.addAll(items);
       expect(o.length, 6);
@@ -387,7 +401,7 @@ void main() {
         'languages',
         'pets',
         'colour',
-        'middleName'
+        'middleName',
       ]);
       o.clear();
       expect(o.length, 0);
@@ -404,7 +418,9 @@ void main() {
       } on Exception catch (ex) {
         expect(ex, const TypeMatcher<JsonObjectLiteException>());
         expect(
-            ex.toString(), 'JsonObjectException: JsonObject is not extendable');
+          ex.toString(),
+          'JsonObjectException: JsonObject is not extendable',
+        );
         thrown = true;
       }
       expect(thrown, true);
@@ -414,7 +430,9 @@ void main() {
       } on Exception catch (ex) {
         expect(ex, const TypeMatcher<JsonObjectLiteException>());
         expect(
-            ex.toString(), 'JsonObjectException: JsonObject is not extendable');
+          ex.toString(),
+          'JsonObjectException: JsonObject is not extendable',
+        );
         thrown = true;
       }
       expect(thrown, true);
@@ -424,7 +442,9 @@ void main() {
       } on Exception catch (ex) {
         expect(ex, const TypeMatcher<JsonObjectLiteException>());
         expect(
-            ex.toString(), 'JsonObjectException: JsonObject is not extendable');
+          ex.toString(),
+          'JsonObjectException: JsonObject is not extendable',
+        );
         thrown = true;
       }
       expect(thrown, true);
@@ -434,7 +454,9 @@ void main() {
       } on Exception catch (ex) {
         expect(ex, const TypeMatcher<JsonObjectLiteException>());
         expect(
-            ex.toString(), 'JsonObjectException: JsonObject is not extendable');
+          ex.toString(),
+          'JsonObjectException: JsonObject is not extendable',
+        );
         thrown = true;
       }
       expect(thrown, true);
@@ -442,12 +464,14 @@ void main() {
 
     test('Special characters', () {
       final dynamic o = JsonObjectLite<dynamic>.fromJsonString(
-          '{"_rev": "100678", "@rev2": "300400", "+": "200700"}');
+        '{"_rev": "100678", "@rev2": "300400", "+": "200700"}',
+      );
       expect(o._rev, '100678');
       expect(o['@rev2'], '300400');
       expect(o['+'], '200700');
       final dynamic p = JsonObjectLite<dynamic>.fromJsonString(
-          '{"_rev": "100678", "@rev2": "300400", "+": "200700"}');
+        '{"_rev": "100678", "@rev2": "300400", "+": "200700"}',
+      );
       expect(p._rev, '100678');
       expect(p['@rev2'], '300400');
       expect(p['+'], '200700');

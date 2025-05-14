@@ -46,8 +46,11 @@ class JsonObjectLite<E> implements Map<dynamic, dynamic> {
   /// The default value is true.
   /// The object is set to immutable, the user must reset this
   /// to add more properties.
-  factory JsonObjectLite.fromJsonString(String jsonString,
-      [JsonObjectLite<dynamic>? t, bool recursive = true]) {
+  factory JsonObjectLite.fromJsonString(
+    String jsonString, [
+    JsonObjectLite<dynamic>? t,
+    bool recursive = true,
+  ]) {
     t ??= JsonObjectLite<dynamic>();
     t._objectData = decoder.convert(jsonString);
     if (recursive) {
@@ -60,8 +63,11 @@ class JsonObjectLite<E> implements Map<dynamic, dynamic> {
   /// Private fromMap constructor.
   /// The object is set to immutable, the user must reset this
   /// to add more properties.
-  factory JsonObjectLite._fromMap(Map<dynamic, dynamic> map,
-      [JsonObjectLite<dynamic>? t, bool recursive = true]) {
+  factory JsonObjectLite._fromMap(
+    Map<dynamic, dynamic> map, [
+    JsonObjectLite<dynamic>? t,
+    bool recursive = true,
+  ]) {
     t ??= JsonObjectLite<dynamic>();
     t._objectData = map;
     if (recursive) {
@@ -73,7 +79,9 @@ class JsonObjectLite<E> implements Map<dynamic, dynamic> {
 
   /// Typed JsonObjectLite
   static JsonObjectLite<dynamic> toTypedJsonObjectLite(
-      JsonObjectLite<dynamic> src, JsonObjectLite<dynamic> dest) {
+    JsonObjectLite<dynamic> src,
+    JsonObjectLite<dynamic> dest,
+  ) {
     dest._objectData = src._objectData;
     if (src.isImmutable!) {
       dest.isImmutable = true;
@@ -381,8 +389,9 @@ class JsonObjectLite<E> implements Map<dynamic, dynamic> {
 class JsonObjectLiteException implements Exception {
   const JsonObjectLiteException([String? message]) : _message = message;
   @override
-  String toString() => _message != null
-      ? 'JsonObjectException: $_message'
-      : 'JsonObjectException';
+  String toString() =>
+      _message != null
+          ? 'JsonObjectException: $_message'
+          : 'JsonObjectException';
   final String? _message;
 }
