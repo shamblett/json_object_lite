@@ -1,3 +1,5 @@
+// ignore_for_file: no-magic-number
+
 /*
  * Package : JsonObjectLite
  * Author : S. Hamblett <steve.hamblett@linux.com>
@@ -148,6 +150,8 @@ class JsonEncoderLite {
 /// a JSON string, and then UTF-8 encoding the string, but without
 /// creating an intermediate string.
 class JsonUtf8Encoder extends Converter<Object, List<int>?> {
+  static const int charEuro = 0x80;
+
   /// Create converter.
   ///
   /// If [indent] is non-`null`, the converter attempts to "pretty-print" the
@@ -188,7 +192,7 @@ class JsonUtf8Encoder extends Converter<Object, List<int>?> {
     checkAscii:
     {
       for (int i = 0; i < string.length; i++) {
-        if (string.codeUnitAt(i) >= 0x80) {
+        if (string.codeUnitAt(i) >= charEuro) {
           break checkAscii;
         }
       }
@@ -330,8 +334,10 @@ abstract class _JsonStringifier {
   static const int newline = 0x0a;
   static const int carriageReturn = 0x0d;
   static const int formFeed = 0x0c;
+  static const int charSpace = 0x20;
   static const int quote = 0x22;
   static const int char0 = 0x30;
+  static const int charW = 0x57;
   static const int backslash = 0x5c;
   static const int charB = 0x62;
   static const int charF = 0x66;
@@ -339,6 +345,10 @@ abstract class _JsonStringifier {
   static const int charR = 0x72;
   static const int charT = 0x74;
   static const int charU = 0x75;
+
+  static const charCodeHexShit = 4;
+  static const int charCodeHexMask = 0x0f;
+
   static const String _typeMarker = 'JsonObjectLite';
 
   /// List of objects currently being traversed. Used to detect cycles.
@@ -362,7 +372,7 @@ abstract class _JsonStringifier {
   void writeNumber(num number);
 
   // ('0' + x) or ('a' + x - 10)
-  static int hexDigit(int x) => x < 10 ? 48 + x : 87 + x;
+  static int hexDigit(int x) => x < newline ? char0 + x : charW + x;
 
   /// Write, and suitably escape, a string's content as a JSON string literal.
   void writeStringContent(String s) {
@@ -373,7 +383,7 @@ abstract class _JsonStringifier {
       if (charCode > backslash) {
         continue;
       }
-      if (charCode < 32) {
+      if (charCode < charSpace) {
         if (i > offset) {
           writeStringSlice(s, offset, i);
         }
@@ -399,8 +409,10 @@ abstract class _JsonStringifier {
             writeCharCode(charU);
             writeCharCode(char0);
             writeCharCode(char0);
-            writeCharCode(hexDigit((charCode >> 4) & 0xf));
-            writeCharCode(hexDigit(charCode & 0xf));
+            writeCharCode(
+              hexDigit((charCode >> charCodeHexShit) & charCodeHexMask),
+            );
+            writeCharCode(hexDigit(charCode & charCodeHexMask));
             break;
         }
       } else if (charCode == quote || charCode == backslash) {
@@ -464,11 +476,14 @@ abstract class _JsonStringifier {
         throw JsonUnsupportedObjectError(object, partialResult: _partialResult);
       }
       _removeSeen(object);
-    } on Exception catch (e) {
-      throw JsonUnsupportedObjectError(
-        object,
-        cause: e,
-        partialResult: _partialResult,
+    } on Exception catch (e, s) {
+      Error.throwWithStackTrace(
+        JsonUnsupportedObjectError(
+          object,
+          cause: e,
+          partialResult: _partialResult,
+        ),
+        s,
       );
     }
   }
@@ -725,7 +740,7 @@ class _JsonStringStringifier extends _JsonStringifier {
 
   @override
   void writeStringSlice(String string, int start, int end) {
-    _sink.write(string.substring(start, end));
+    _sink.write('${(string.characters.getRange(start, end))}');
   }
 
   @override
@@ -753,6 +768,8 @@ class _JsonStringStringifierPretty extends _JsonStringStringifier
 /// The JSON text is UTF-8 encoded and written to [Uint8List] buffers.
 /// The buffers are then passed back to a user provided callback method.
 class _JsonUtf8Stringifier extends _JsonStringifier {
+  static const int charDEl = 0x7f;
+
   _JsonUtf8Stringifier(super.toEncodable, this.bufferSize, this.addChunk)
     : buffer = Uint8List(bufferSize);
 
@@ -814,7 +831,7 @@ class _JsonUtf8Stringifier extends _JsonStringifier {
   void writeAsciiString(String string) {
     for (int i = 0; i < string.length; i++) {
       final int char = string.codeUnitAt(i);
-      assert(char <= 0x7f, 'char must be <= 0x7f');
+      assert(char <= charDEl, 'char must be <= 0x7f');
       writeByte(char);
     }
   }
@@ -828,7 +845,7 @@ class _JsonUtf8Stringifier extends _JsonStringifier {
   void writeStringSlice(String string, int start, int end) {
     for (int i = start; i < end; i++) {
       int char = string.codeUnitAt(i);
-      if (char <= 0x7f) {
+      if (char <= charDEl) {
         writeByte(char);
       } else {
         if ((char & 0xFC00) == 0xD800 && i + 1 < end) {
@@ -849,7 +866,7 @@ class _JsonUtf8Stringifier extends _JsonStringifier {
 
   @override
   void writeCharCode(int charCode) {
-    if (charCode <= 0x7f) {
+    if (charCode <= charDEl) {
       writeByte(charCode);
       return;
     }
