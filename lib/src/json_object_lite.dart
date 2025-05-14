@@ -1,3 +1,5 @@
+// ignore_for_file: avoid-global-state
+
 /*
  * Package : JsonObjectLite
  * Author : S. Hamblett <steve.hamblett@linux.com>
@@ -9,12 +11,6 @@
 // ignore_for_file: avoid_positional_boolean_parameters
 // ignore_for_file: public_member_api_docs
 part of '../json_object_lite.dart';
-
-// ignore_for_file: omit_local_variable_types
-// ignore_for_file: unnecessary_final
-// ignore_for_file: cascade_invocations
-// ignore_for_file: avoid_print
-// ignore_for_file: avoid_annotating_with_dynamic
 
 /// Set to true to as required
 bool enableJsonObjectLiteDebugMessages = false;
@@ -30,60 +26,6 @@ void _log(String obj) {
 /// noSuchMethod. The object is set to not immutable so properties can be
 /// added.
 class JsonObjectLite<E> implements Map<dynamic, dynamic> {
-  /// Default constructor.
-  /// Creates a new empty map.
-  JsonObjectLite() {
-    _objectData = <dynamic, dynamic>{};
-    isImmutable = false;
-  }
-
-  /// Eager constructor parses [jsonString] using [JsonDecoder].
-  ///
-  /// If [t] is given, will replace [t]'s contents from the
-  /// string and return [t].
-  ///
-  /// If [recursive] is true, replaces all maps recursively with JsonObjects.
-  /// The default value is true.
-  /// The object is set to immutable, the user must reset this
-  /// to add more properties.
-  factory JsonObjectLite.fromJsonString(String jsonString,
-      [JsonObjectLite<dynamic>? t, bool recursive = true]) {
-    t ??= JsonObjectLite<dynamic>();
-    t._objectData = decoder.convert(jsonString);
-    if (recursive) {
-      t._extractElements(t._objectData);
-    }
-    t.isImmutable = true;
-    return t as JsonObjectLite<E>;
-  }
-
-  /// Private fromMap constructor.
-  /// The object is set to immutable, the user must reset this
-  /// to add more properties.
-  factory JsonObjectLite._fromMap(Map<dynamic, dynamic> map,
-      [JsonObjectLite<dynamic>? t, bool recursive = true]) {
-    t ??= JsonObjectLite<dynamic>();
-    t._objectData = map;
-    if (recursive) {
-      t._extractElements(t._objectData);
-    }
-    t.isImmutable = true;
-    return t as JsonObjectLite<E>;
-  }
-
-  /// Typed JsonObjectLite
-  static JsonObjectLite<dynamic> toTypedJsonObjectLite(
-      JsonObjectLite<dynamic> src, JsonObjectLite<dynamic> dest) {
-    dest._objectData = src._objectData;
-    if (src.isImmutable!) {
-      dest.isImmutable = true;
-    }
-    return dest;
-  }
-
-  /// Contains either a [List] or [Map]
-  dynamic _objectData;
-
   /// JSON encoder, use our encoder not the one from convert
   static const JsonEncoderLite encoder = JsonEncoderLite();
 
@@ -105,6 +47,96 @@ class JsonObjectLite<E> implements Map<dynamic, dynamic> {
   /// The default constructor [JsonObjectLite()], sets this value to
   /// false so properties can be added.
   bool? isImmutable;
+
+  // Contains either a [List] or [Map]
+  dynamic _objectData;
+
+  E get first => toIterable()!.first;
+
+  Iterator<E> get iterator => toIterable()!.iterator as Iterator<E>;
+
+  E get last => toIterable()!.last;
+
+  E get single => toIterable()!.single;
+
+  // Pass through to the inner _objectData map.
+  @override
+  Iterable<dynamic> get keys => _objectData.keys;
+
+  // Pass through to the inner _objectData map.
+  @override
+  Iterable<dynamic> get values => _objectData.values;
+
+  // Pass through to the inner _objectData map.
+  @override
+  int get length => _objectData.length;
+
+  // Pass through to the inner _objectData map.
+  @override
+  bool get isEmpty => _objectData.isEmpty;
+
+  // Pass through to the inner _objectData map.
+  @override
+  bool get isNotEmpty => _objectData.isNotEmpty;
+
+  /// Default constructor.
+  /// Creates a new empty map.
+  JsonObjectLite() {
+    _objectData = <dynamic, dynamic>{};
+    isImmutable = false;
+  }
+
+  /// Eager constructor parses [jsonString] using [JsonDecoder].
+  ///
+  /// If [t] is given, will replace [t]'s contents from the
+  /// string and return [t].
+  ///
+  /// If [recursive] is true, replaces all maps recursively with JsonObjects.
+  /// The default value is true.
+  /// The object is set to immutable, the user must reset this
+  /// to add more properties.
+  factory JsonObjectLite.fromJsonString(
+    String jsonString, [
+    JsonObjectLite<dynamic>? t,
+    bool recursive = true,
+  ]) {
+    t ??= JsonObjectLite<dynamic>();
+    t._objectData = decoder.convert(jsonString);
+    if (recursive) {
+      t._extractElements(t._objectData);
+    }
+    t.isImmutable = true;
+    return t as JsonObjectLite<E>;
+  }
+
+  /// Private fromMap constructor.
+  /// The object is set to immutable, the user must reset this
+  /// to add more properties.
+  factory JsonObjectLite._fromMap(
+    Map<dynamic, dynamic> map, [
+    JsonObjectLite<dynamic>? t,
+    bool recursive = true,
+  ]) {
+    t ??= JsonObjectLite<dynamic>();
+    t._objectData = map;
+    if (recursive) {
+      t._extractElements(t._objectData);
+    }
+    t.isImmutable = true;
+    return t as JsonObjectLite<E>;
+  }
+
+  /// Typed JsonObjectLite
+  static JsonObjectLite<dynamic> toTypedJsonObjectLite(
+    JsonObjectLite<dynamic> src,
+    JsonObjectLite<dynamic> dest,
+  ) {
+    dest._objectData = src._objectData;
+    if (src.isImmutable!) {
+      dest.isImmutable = true;
+    }
+    return dest;
+  }
 
   /// Returns a string representation of the underlying object data
   @override
@@ -149,7 +181,7 @@ class JsonObjectLite<E> implements Map<dynamic, dynamic> {
       // if isImmutable = false
       property = _symbolToString(mirror.memberName, true);
       if (!isImmutable!) {
-        this[property] = mirror.positionalArguments[0];
+        this[property] = mirror.positionalArguments.first;
       }
       return this[property];
     }
@@ -160,66 +192,6 @@ class JsonObjectLite<E> implements Map<dynamic, dynamic> {
     _log('noSuchMethod:: IsSetter: ${mirror.isGetter}');
     _log('noSuchMethod:: isAccessor: ${mirror.isAccessor}');
     return super.noSuchMethod(mirror);
-  }
-
-  /// If the object passed in is a MAP, then we iterate through each of
-  /// the values of the map, and if any value is a map, then we create a new
-  /// [JsonObjectLite] replacing that map in the original data with
-  /// that [JsonObjectLite] to a new [JsonObjectLite].
-  /// If the value is a Collection, then we call this function recursively.
-  ///
-  /// If the object passed in is a Collection, then we iterate through
-  /// each item.  If that item is a map, then we replace the item with a
-  /// [JsonObjectLite] created from the map.  If the item is a
-  /// Collection, then we call this function recursively.
-  ///
-  void _extractElements(dynamic data) {
-    if (data is Map) {
-      // Iterate through each of the k,v pairs, replacing maps with jsonObjects
-      data.forEach((dynamic key, dynamic value) {
-        if (value is Map) {
-          // Replace the existing Map with a JsonObjectLite
-          data[key] = JsonObjectLite<dynamic>._fromMap(value);
-        } else if (value is List) {
-          // Recurse
-          _extractElements(value);
-        }
-      });
-    } else if (data is List) {
-      // Iterate through each of the items
-      // If any of them is a list, check to see if it contains a map
-
-      for (int i = 0; i < data.length; i++) {
-        // Use the for loop so that we can index the item to replace it if req'd
-        final dynamic listItem = data[i];
-        if (listItem is List) {
-          // Recurse
-          _extractElements(listItem);
-        } else if (listItem is Map) {
-          // Replace the existing Map with a JsonObject
-          data[i] = JsonObjectLite<dynamic>._fromMap(listItem);
-        }
-      }
-    }
-  }
-
-  /// Convert the incoming method name(symbol) into a string,
-  /// without using mirrors.
-  String _symbolToString(dynamic value, [bool isSetter = false]) {
-    String ret;
-    if (value is Symbol) {
-      // Brittle but we avoid mirrors
-      final String name = value.toString();
-      ret = name.substring(name.indexOf('"') + 1, name.lastIndexOf('"'));
-      // Setters have an '=' on the end, remove it
-      if (isSetter) {
-        ret = ret.replaceFirst('=', '', ret.length - 1);
-      }
-    } else {
-      ret = value.toString();
-    }
-    _log('_symbolToString:: Method name is: $ret');
-    return ret;
   }
 
   ///
@@ -266,14 +238,6 @@ class JsonObjectLite<E> implements Map<dynamic, dynamic> {
   Iterable<E> where(bool Function(dynamic element) f) =>
       toIterable()!.where(f) as Iterable<E>;
 
-  E get first => toIterable()!.first;
-
-  Iterator<E> get iterator => toIterable()!.iterator as Iterator<E>;
-
-  E get last => toIterable()!.last;
-
-  E get single => toIterable()!.single;
-
   ///
   /// Map implementation methods and properties *
   ///
@@ -289,10 +253,6 @@ class JsonObjectLite<E> implements Map<dynamic, dynamic> {
 
   // Pass through to the inner _objectData map.
   @override
-  bool get isNotEmpty => _objectData.isNotEmpty;
-
-  // Pass through to the inner _objectData map.
-  @override
   dynamic operator [](dynamic key) => _objectData[key];
 
   // Pass through to the inner _objectData map.
@@ -300,22 +260,6 @@ class JsonObjectLite<E> implements Map<dynamic, dynamic> {
   void forEach(void Function(dynamic key, dynamic value) func) {
     _objectData.forEach(func);
   }
-
-  // Pass through to the inner _objectData map.
-  @override
-  Iterable<dynamic> get keys => _objectData.keys;
-
-  // Pass through to the inner _objectData map.
-  @override
-  Iterable<dynamic> get values => _objectData.values;
-
-  // Pass through to the inner _objectData map.
-  @override
-  int get length => _objectData.length;
-
-  // Pass through to the inner _objectData map.
-  @override
-  bool get isEmpty => _objectData.isEmpty;
 
   // Pass through to the inner _objectData map.
   @override
@@ -375,14 +319,77 @@ class JsonObjectLite<E> implements Map<dynamic, dynamic> {
       throw const JsonObjectLiteException('JsonObject is not extendable');
     }
   }
+
+  // If the object passed in is a MAP, then we iterate through each of
+  // the values of the map, and if any value is a map, then we create a new
+  // [JsonObjectLite] replacing that map in the original data with
+  // that [JsonObjectLite] to a new [JsonObjectLite].
+  // If the value is a Collection, then we call this function recursively.
+  //
+  // If the object passed in is a Collection, then we iterate through
+  // each item.  If that item is a map, then we replace the item with a
+  // [JsonObjectLite] created from the map.  If the item is a
+  // Collection, then we call this function recursively.
+  //
+  void _extractElements(dynamic data) {
+    if (data is Map) {
+      // Iterate through each of the k,v pairs, replacing maps with jsonObjects
+      data.forEach((dynamic key, dynamic value) {
+        if (value is Map) {
+          // Replace the existing Map with a JsonObjectLite
+          data[key] = JsonObjectLite<dynamic>._fromMap(value);
+        } else if (value is List) {
+          // Recurse
+          _extractElements(value);
+        }
+      });
+    } else if (data is List) {
+      // Iterate through each of the items
+      // If any of them is a list, check to see if it contains a map
+
+      for (int i = 0; i < data.length; i++) {
+        // Use the for loop so that we can index the item to replace it if req'd
+        final dynamic listItem = data[i];
+        if (listItem is List) {
+          // Recurse
+          _extractElements(listItem);
+        } else if (listItem is Map) {
+          // Replace the existing Map with a JsonObject
+          data[i] = JsonObjectLite<dynamic>._fromMap(listItem);
+        }
+      }
+    }
+  }
+
+  // Convert the incoming method name(symbol) into a string,
+  // without using mirrors.
+  String _symbolToString(dynamic value, [bool isSetter = false]) {
+    String ret;
+    if (value is Symbol) {
+      // Brittle but we avoid mirrors
+      final String name = value.toString();
+      ret =
+          '${name.characters.getRange(name.indexOf('"') + 1, name.lastIndexOf('"'))}';
+      // Setters have an '=' on the end, remove it
+      if (isSetter) {
+        ret = ret.replaceFirst('=', '', ret.length - 1);
+      }
+    } else {
+      ret = value.toString();
+    }
+    _log('_symbolToString:: Method name is: $ret');
+    return ret;
+  }
 }
 
 /// Exception class thrown by JsonObjectLite
 class JsonObjectLiteException implements Exception {
+  final String? _message;
+
   const JsonObjectLiteException([String? message]) : _message = message;
   @override
-  String toString() => _message != null
-      ? 'JsonObjectException: $_message'
-      : 'JsonObjectException';
-  final String? _message;
+  String toString() =>
+      _message != null
+          ? 'JsonObjectException: $_message'
+          : 'JsonObjectException';
 }

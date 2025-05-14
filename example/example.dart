@@ -83,8 +83,9 @@ int main() {
   print(data.targets[0]); // should be dartium
 
   // Nested types are also strongly typed
-  final dynamic website =
-      LanguageWebsite.fromJsonObject(data.website); // contains a JsonObjectLite
+  final dynamic website = LanguageWebsite.fromJsonObject(
+    data.website,
+  ); // contains a JsonObjectLite
   print(website.homepage);
   website.isImmutable = false; // Now we can extend it
   website.homepage = 'http://www.dartlang.org';
