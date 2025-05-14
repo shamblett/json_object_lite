@@ -1,3 +1,6 @@
+**4.0.2**<br>
+- [Issue 10](https://github.com/shamblett/json_object_lite/issues/10)
+
 **4.0.1**<br>
 - [Issue 8](https://github.com/shamblett/json_object_lite/issues/8)
 

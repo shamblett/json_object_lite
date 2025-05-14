@@ -1,14 +1,66 @@
-SPDXVersion: SPDX-2.2DataLicense: CC0-1.0SPDXID: SPDXRef-DOCUMENTDocumentName: json_object_liteDocumentNamespace: https://pub.dev/packages/json_object_liteLicenseListVersion: 3.8Creator: Tool: https://pub.dev/packages/sbomCreated: 2023-12-27T10:09:27Z
+SPDXVersion: SPDX-2.2
+DataLicense: CC0-1.0
+SPDXID: SPDXRef-DOCUMENT
+DocumentName: json_object_lite
+DocumentNamespace: https://pub.dev/packages/json_object_lite
+LicenseListVersion: 3.8
+Creator: Tool: https://pub.dev/packages/sbom
+Created: 2025-05-14T11:00:21Z
 
-PackageName: json-object-liteSPDXID: SPDXRef-Package-json-object-litePackageVersion: 4.0.1PackageFileName: json_object_litePackageSupplier: NOASSERTIONPackageOriginator: NOASSERTIONPackageDownloadLocation: https://pub.dev/packages/json_object_liteFilesAnalyzed: truePackageVerificationCode: 3783f11bfea67a2b355a78e982780c0df66c5b0aPackageHomePage: https://pub.dev/packages/json_object_litePackageLicenseConcluded: MITPackageLicenseInfoFromFiles: NOASSERTIONPackageLicenseDeclared: NOASSERTIONPackageCopyrightText: NOASSERTIONPackageSummary: <text>Allow use of JSON Maps in dot notation format without using mirrors.</text>
 
-FileName: /lib/json_object_lite.dartSPDXID: SPDXRef-json-object-lite-0FileType: SOURCEFileChecksum: SHA1: 3a9e50e281b444aa6a56aa451bc42ae4b028c1a4LicenseConcluded: NOASSERTIONLicenseInfoInFile: NOASSERTIONFileCopyrightText: NOASSERTION
+PackageName: json-object-lite
+SPDXID: SPDXRef-Package-json-object-lite
+PackageVersion: 4.0.2
+PackageFileName: json_object_lite
+PackageSupplier: NOASSERTION
+PackageOriginator: NOASSERTION
+PackageDownloadLocation: https://pub.dev/packages/json_object_lite
+FilesAnalyzed: true
+PackageVerificationCode: 0ca3bc6d5928d392f2a21f60ed3cb40816e9741f
+PackageHomePage: https://pub.dev/packages/json_object_lite
+PackageLicenseConcluded: MIT
+PackageLicenseInfoFromFiles: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageSummary: <text>Allow use of JSON Maps in dot notation format without using mirrors.</text>
 
-FileName: /lib/src/json_object_lite.dartSPDXID: SPDXRef-json-object-lite-1FileType: SOURCEFileChecksum: SHA1: 874b29d8ce1e3c24d8d323021809989a7745822aLicenseConcluded: NOASSERTIONLicenseInfoInFile: NOASSERTIONFileCopyrightText: NOASSERTION
 
-FileName: /lib/src/support/json.dartSPDXID: SPDXRef-json-2FileType: SOURCEFileChecksum: SHA1: d2ec5d68aa6119741f5a8900920ef311e21d6eb3LicenseConcluded: NOASSERTIONLicenseInfoInFile: NOASSERTIONFileCopyrightText: NOASSERTION
+FileName: lib/json_object_lite.dart
+SPDXID: SPDXRef-json-object-lite-0
+FileType: SOURCE
+FileChecksum: SHA1: 4b0009cad8d1de4224f8e00e564da11949493edc
+LicenseConcluded: NOASSERTION
+LicenseInfoInFile: NOASSERTION
+FileCopyrightText: NOASSERTION
 
-FileName: /pubspec.yamlSPDXID: SPDXRef-pubspec-3FileType: TEXTFileChecksum: SHA1: a7151b3630d9d74219ced8478409d2159f843934LicenseConcluded: NOASSERTIONLicenseInfoInFile: NOASSERTIONFileCopyrightText: NOASSERTION
+
+FileName: lib/src/json_object_lite.dart
+SPDXID: SPDXRef-json-object-lite-1
+FileType: SOURCE
+FileChecksum: SHA1: 36b21c1aef06fd77c3dc22131b939da1e11b256d
+LicenseConcluded: NOASSERTION
+LicenseInfoInFile: NOASSERTION
+FileCopyrightText: NOASSERTION
+
+
+FileName: lib/src/support/json.dart
+SPDXID: SPDXRef-json-2
+FileType: SOURCE
+FileChecksum: SHA1: 17e61186d8ca50d0d368e4cf8e94956cc6546361
+LicenseConcluded: NOASSERTION
+LicenseInfoInFile: NOASSERTION
+FileCopyrightText: NOASSERTION
+
+
+FileName: pubspec.yaml
+SPDXID: SPDXRef-pubspec-3
+FileType: TEXT
+FileChecksum: SHA1: 07be07a3bbb134890f529bf194918d54f527017e
+LicenseConcluded: NOASSERTION
+LicenseInfoInFile: NOASSERTION
+FileCopyrightText: NOASSERTION
+
 
 Relationship: SPDXRef-pubspec-3 DEPENDENCY_MANIFEST_OF SPDXRef-Package-json-object-lite
+
 
