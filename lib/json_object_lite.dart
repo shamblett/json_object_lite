@@ -6,7 +6,7 @@
  * Based on json_object (C) 2013 Chris Buckett (chrisbuckett@gmail.com)
  */
 
-library json_object_lite;
+library;
 
 import 'dart:convert';
 import 'dart:typed_data';

@@ -10,12 +10,6 @@
 // ignore_for_file: public_member_api_docs
 part of '../json_object_lite.dart';
 
-// ignore_for_file: omit_local_variable_types
-// ignore_for_file: unnecessary_final
-// ignore_for_file: cascade_invocations
-// ignore_for_file: avoid_print
-// ignore_for_file: avoid_annotating_with_dynamic
-
 /// Set to true to as required
 bool enableJsonObjectLiteDebugMessages = false;
 
